@@ -1,6 +1,12 @@
 plugins {
     `common-conventions`
     `shadow-conventions`
+    `bukkit-conventions`
+}
+
+paper {
+    main = "net.craftoriya.packetuxui.PacketUxUiPlugin"
+    loader = "net.craftoriya.packetuxui.bukkit.PacketUxUiBukkitLoader"
 }
 
 dependencies {
@@ -8,9 +14,11 @@ dependencies {
     compileOnlyApi(libs.packetevents.bukkit)
 
     api(project(":packetuxui-api"))
-}
 
-configurations.runtimeClasspath {
-    val fastUtil = libs.fastutil.get()
-    exclude(fastUtil.group, fastUtil.name)
+    paperLibrary(libs.fastutil)
+    paperLibrary(libs.coroutines)
+    paperLibrary(libs.okhttp)
+    paperLibrary(libs.okhttp.kotlin)
+    paperLibrary(libs.caffeine.courotines)
+    paperLibrary(libs.gson)
 }

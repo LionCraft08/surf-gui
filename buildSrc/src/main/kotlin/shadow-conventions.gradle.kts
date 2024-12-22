@@ -10,18 +10,12 @@ plugins {
 tasks.withType<ShadowJar> {
     mergeServiceFiles()
 
-    val base = "net.craftoriya.libs"
-    val relocations = listOf(
-        "com.github.shynixn.mccoroutine" to "$base.mccoroutine",
-        "io.leangen.geantyref" to "$base.geantyref",
-        "kotlin" to "$base.kotlin",
-        "kotlinx" to "$base.kotlinx",
-        "org.incendo.cloud" to "$base.cloud",
-        "org.intellij" to "$base.intellij",
-        "org.jetbrains" to "$base.jetbrains",
-        "okhttp3" to "$base.okhttp3",
-        "com.sksamuel.aedile" to "$base.caffeine",
-        "com.google.gson" to "$base.gson",
+    exclude("kotlin/**")
+    val group = "net.craftoriya"
+    val relocations = mapOf(
+        "com.github.shynixn.mccoroutine" to "$group.libs.mccoroutine",
+        "org.intellij" to "$group.libs.intellij",
+        "org.jetbrains" to "$group.libs.jetbrains"
     )
 
     relocations.forEach { (from, to) ->

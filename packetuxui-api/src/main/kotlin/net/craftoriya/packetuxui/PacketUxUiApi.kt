@@ -3,11 +3,9 @@ package net.craftoriya.packetuxui
 import com.github.retrooper.packetevents.PacketEvents
 import net.craftoriya.packetuxui.controller.PacketListener
 
-abstract class PacketUxUiApi {
-    private var initialized = false
+object PacketUxUiApi {
 
-    abstract fun initPlatform()
-    abstract fun terminatePlatform()
+    private var initialized = false
 
     fun init() {
         if (initialized) return
@@ -23,21 +21,11 @@ abstract class PacketUxUiApi {
 
         packetEvents.eventManager.registerListener(PacketListener)
 
-        initPlatform()
-
         initialized = true
     }
 
     fun terminate() {
         if (!initialized) return
-
-        val packetEvents = PacketEvents.getAPI()
-
-        if (!packetEvents.isTerminated) {
-            packetEvents.terminate()
-        }
-
-        terminatePlatform()
 
         initialized = false
     }

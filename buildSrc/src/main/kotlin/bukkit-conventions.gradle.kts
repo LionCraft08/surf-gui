@@ -32,7 +32,8 @@ paper {
 
     foliaSupported = true
     apiVersion = "1.21"
-    authors = listOf("OceJlot")
+    authors = listOf("OceJlot", "Ammo", "Twisti_twixi")
+    generateLibrariesJson = true
 
     serverDependencies {
         register("packetevents") {

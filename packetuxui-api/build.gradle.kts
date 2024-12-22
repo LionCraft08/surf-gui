@@ -9,10 +9,10 @@ dependencies {
     compileOnly(libs.adventure.minimessage)
     compileOnly(libs.adventure.plaintext)
 
-    api(libs.fastutil)
-    api(libs.coroutines)
-    api(libs.okhttp)
-    api(libs.okhttp.kotlin)
-    api(libs.caffeine.courotines)
-    api(libs.gson)
+    compileOnlyApi(libs.fastutil)
+    compileOnlyApi(libs.coroutines)
+    compileOnlyApi(libs.okhttp)
+    compileOnlyApi(libs.okhttp.kotlin)
+    compileOnlyApi(libs.caffeine.courotines)
+    compileOnlyApi(libs.gson)
 }

@@ -1,3 +1,5 @@
+import net.minecrell.pluginyml.paper.PaperPluginDescription
+
 plugins {
     `common-conventions`
     `bukkit-conventions`
@@ -5,13 +7,27 @@ plugins {
 }
 
 dependencies {
-    api(project(":packetuxui-bukkit"))
+    compileOnlyApi(project(":packetuxui-bukkit"))
+}
 
-    implementation("org.incendo:cloud-paper:2.0.0-beta.10")
+tasks.runServer {
+    pluginJars.from(
+        project(":packetuxui-bukkit").tasks.named(
+            "shadowJar"
+        )
+    )
 }
 
 paper {
     main = "net.craftoriya.TestMenu"
+
+    serverDependencies {
+        register("packetuxui-bukkit") {
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            required = true
+            joinClasspath = true
+        }
+    }
 }
 
 
