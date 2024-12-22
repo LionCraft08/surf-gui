@@ -3,15 +3,10 @@ package net.craftoriya.menus
 import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.protocol.item.enchantment.type.EnchantmentTypes
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
-import com.github.shynixn.mccoroutine.folia.launch
-import kotlinx.coroutines.delay
-import net.craftoriya.packetuxui.bukkit.extensions.getMenu
-import net.craftoriya.packetuxui.bukkit.extensions.updateItem
 import net.craftoriya.packetuxui.common.toComponent
 import net.craftoriya.packetuxui.service.*
+import net.craftoriya.packetuxui.state.intState
 import net.craftoriya.packetuxui.types.InventoryType
-import net.craftoriya.plugin
-import org.bukkit.Bukkit
 import kotlin.random.Random
 
 class AllInOne {
@@ -20,27 +15,29 @@ class AllInOne {
     private val updateButtons = listOf(2, 4, 6, 8, 10)
 
     fun startUpdate() {
-        plugin.launch { // This job is not stopped when the menu closes
-            while (true) {
-                println("tick")
-                for (player in Bukkit.getOnlinePlayers()) {
-                    if (menuService.getMenu(player)?.name == menu.name) {
-                        for (slot in updateButtons) {
-                            if (chance(20)) {
-                                val item = if (chance(50)) stone else air
-                                menuService.updateItem(player, item, slot)
-                            }
-                        }
-                    }
-                }
-
-                delay(200)
-            }
-        }
+//        plugin.launch { // This job is not stopped when the menu closes
+//            while (true) {
+//                println("tick")
+//                for (player in Bukkit.getOnlinePlayers()) {
+//                    if (menuService.getMenu(player)?.name == menu.name) {
+//                        for (slot in updateButtons) {
+//                            if (chance(20)) {
+//                                val item = if (chance(50)) stone else air
+//                                menuService.updateItem(player, item, slot)
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                delay(200)
+//            }
+//        }
     }
 
     val menu = menu(InventoryType.GENERIC9X4) {
         name = "<gradient:#ff6d2e:#1e90ff><bold>Feature Showcase Menu".toComponent()
+
+        var counter by intState(0).notNull()
 
         buildAllButtons { slot ->
             when {
@@ -53,11 +50,19 @@ class AllInOne {
                     buildItem {
                         itemType = ItemTypes.GLOWSTONE
                         name = "<yellow><bold>Glowing Stone".toComponent()
-                        amount = 1
+                        amount = counter
                     }
                     click {
                         it.user.sendMessage("<green>You clicked on the glowing button!".toComponent())
                         it.user.sendMessage("Button type: ${it.buttonType}".toComponent())
+
+                        counter++
+
+                        menuService.updateItem(it.user, buildItem {
+                            itemType = ItemTypes.GLOWSTONE
+                            name = "<yellow><bold>Glowing Stone".toComponent()
+                            amount = counter
+                        }.build().item, slot)
                     }
                 }
 
