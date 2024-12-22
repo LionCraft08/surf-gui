@@ -15,10 +15,10 @@ class PacketUxUiPlugin : JavaPlugin() {
     override fun onLoad() {
         UserManager.userCreator = { uuid -> BukkitUser(uuid) }
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
-        PacketUxUiApi.init()
     }
 
     override fun onEnable() {
+        PacketUxUiApi.init()
         Bukkit.getPluginManager().registerEvents(BukkitListener, plugin)
     }
 
