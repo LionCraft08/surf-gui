@@ -23,46 +23,46 @@ class CooldownTest {
         .amount(1)
         .build()
 
-    val button = ButtonBuilder()
-        .item(item)
-        .cooldown(CooldownComponent(
-            10000, {
-                it.user.sendMessage(
-                    """
-                
-                <red>You can do everything the same as in execute, 
-                when the player is under cooldown
-                but not when freeze time""".trimIndent().toComponent()
-                )
-            }
-        ))
-        .build()
-
-    val button1 = ButtonBuilder()
-        .item(item1)
-        .cooldown(
-            CooldownComponent(
-                2000, {
-                    it.user.sendMessage(
-                        """
-                
-                <red>You can do everything the same as in execute, 
-                when the player is under cooldown
-                but not when freeze time""".trimIndent().toComponent()
-                    )
-                },
-                1000
-            )
-        )
-        .build()
+//    val button = ButtonBuilder()
+//        .item(item)
+//        .cooldown(CooldownComponent(
+//            10000, {
+//                it.user.sendMessage(
+//                    """
+//
+//                <red>You can do everything the same as in execute,
+//                when the player is under cooldown
+//                but not when freeze time""".trimIndent().toComponent()
+//                )
+//            }
+//        ))
+//        .build()
+//
+//    val button1 = ButtonBuilder()
+//        .item(item1)
+//        .cooldown(
+//            CooldownComponent(
+//                2000, {
+//                    it.user.sendMessage(
+//                        """
+//
+//                <red>You can do everything the same as in execute,
+//                when the player is under cooldown
+//                but not when freeze time""".trimIndent().toComponent()
+//                    )
+//                },
+//                1000
+//            )
+//        )
+//        .build()
 
     val menu = Menu(
         name = "<gradient:#96d9be:#00b4d8><bold>CooldownTest".toComponent(),
         type = InventoryType.ANVIL,
         buttons = mapOf(
-            0 to button,
-            1 to button1,
-            2 to button
+//            0 to button,
+//            1 to button1,
+//            2 to button
         )
     )
 }
