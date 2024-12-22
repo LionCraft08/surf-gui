@@ -18,6 +18,7 @@ commandapi-velocity-kotlin = "9.6.0-SNAPSHOT"
 caffeine-courotines = "2.0.1"
 okhttp = "5.0.0-alpha.14"
 gson = "2.11.0"
+repoauth = "3.0.4"
 
 [libraries]
 kotlin-jvm = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-jvm" }
@@ -46,3 +47,4 @@ caffeine-courotines = { module = "com.sksamuel.aedile:aedile-core", version.ref 
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-kotlin = { module = "com.squareup.okhttp3:okhttp-coroutines", version.ref = "okhttp" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+repoauth = { module = "org.hibernate.build.maven-repo-auth:org.hibernate.build.maven-repo-auth.gradle.plugin", version.ref = "repoauth" }

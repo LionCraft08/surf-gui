@@ -1,13 +1,14 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
+    `maven-publish`
+
     id("com.gradleup.shadow")
+    id("org.hibernate.build.maven-repo-auth")
 }
 
 tasks.withType<ShadowJar> {
-    archiveClassifier.set("")
     mergeServiceFiles()
-    minimize()
 
     val base = "net.craftoriya.libs"
     val relocations = listOf(
@@ -25,5 +26,19 @@ tasks.withType<ShadowJar> {
 
     relocations.forEach { (from, to) ->
         relocate(from, to)
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        maven(System.getenv("MAVEN_SNAPSHOT_REPOSITORY_URL")) {
+            name = System.getenv("MAVEN_SNAPSHOT_REPOSITORY_NAME")
+        }
     }
 }
