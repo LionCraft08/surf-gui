@@ -1,4 +1,4 @@
-package net.craftoriya.packetuxui.controller
+package net.craftoriya.packetuxui.listeners
 
 import com.github.retrooper.packetevents.event.PacketListenerAbstract
 import com.github.retrooper.packetevents.event.PacketListenerPriority
@@ -8,8 +8,8 @@ import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.craftoriya.packetuxui.service.findMatchingMenu
-import net.craftoriya.packetuxui.service.menuService
+import net.craftoriya.packetuxui.menu.menu.findMatchingMenu
+import net.craftoriya.packetuxui.menu.menu.menuService
 import net.craftoriya.packetuxui.types.ClickType
 import net.craftoriya.packetuxui.user.UserManager
 

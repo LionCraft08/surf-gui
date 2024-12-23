@@ -1,6 +1,6 @@
-package net.craftoriya.packetuxui.types
+package net.craftoriya.packetuxui.menu.menu
 
-enum class InventoryType(slots: Int) {
+enum class MenuType(slots: Int) {
     GENERIC9X1(9),
     GENERIC9X2(18),
     GENERIC9X3(27),

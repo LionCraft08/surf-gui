@@ -1,4 +1,4 @@
-package net.craftoriya.packetuxui.service
+package net.craftoriya.packetuxui.menu.item
 
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemEnchantments
@@ -9,6 +9,7 @@ import com.github.retrooper.packetevents.protocol.item.type.ItemType
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
 import net.craftoriya.packetuxui.common.mutableObject2IntMapOf
 import net.craftoriya.packetuxui.common.mutableObjectListOf
+import net.craftoriya.packetuxui.common.toObjectArrayList
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 
@@ -25,25 +26,30 @@ open class ItemBuilder {
     fun name(name: Component) = apply { this.name = name }
 
     fun lore(lore: MutableList<Component>) = apply {
-        this.lore += lore.map {
+        this.lore = lore.map {
             it.decorationIfAbsent(
                 TextDecoration.ITALIC,
                 TextDecoration.State.FALSE
             )
-        }
+        }.toObjectArrayList()
     }
 
     fun lore(lore: Component) = apply {
-        this.lore += lore.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+        this.lore = mutableObjectListOf(
+            lore.decorationIfAbsent(
+                TextDecoration.ITALIC,
+                TextDecoration.State.FALSE
+            )
+        )
     }
 
     fun lore(vararg lore: Component) = apply {
-        this.lore += lore.map {
+        this.lore = lore.map {
             it.decorationIfAbsent(
                 TextDecoration.ITALIC,
                 TextDecoration.State.FALSE
             )
-        }
+        }.toObjectArrayList()
     }
 
     fun amount(amount: Int) = apply { this.amount = amount }
@@ -60,6 +66,7 @@ open class ItemBuilder {
         vararg enchantments: Pair<EnchantmentType, Int>,
         visible: Boolean = true
     ) = apply {
+        this.enchantments.clear()
         this.enchantments += enchantments
         this.enchantVisibility = visible
     }

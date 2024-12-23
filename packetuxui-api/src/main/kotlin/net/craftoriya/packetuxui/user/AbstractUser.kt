@@ -1,6 +1,6 @@
 package net.craftoriya.packetuxui.user
 
-import net.craftoriya.packetuxui.service.Menu
+import net.craftoriya.packetuxui.menu.menu.Menu
 import java.util.*
 
 abstract class AbstractUser(

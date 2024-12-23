@@ -1,4 +1,4 @@
-package net.craftoriya.packetuxui.service
+package net.craftoriya.packetuxui.menu.menu
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerOpenWindow
@@ -8,9 +8,9 @@ import kotlinx.coroutines.*
 import net.craftoriya.packetuxui.api
 import net.craftoriya.packetuxui.common.*
 import net.craftoriya.packetuxui.dto.CooldownComponent
-import net.craftoriya.packetuxui.types.ExecutableComponent
-import net.craftoriya.packetuxui.types.ExecutableComponentMarker
-import net.craftoriya.packetuxui.types.InventoryType
+import net.craftoriya.packetuxui.menu.button.*
+import net.craftoriya.packetuxui.menu.button.click.ExecutableComponent
+import net.craftoriya.packetuxui.menu.button.click.ExecutableComponentMarker
 import net.craftoriya.packetuxui.user.AbstractUser
 import net.craftoriya.packetuxui.user.User
 import net.kyori.adventure.text.Component
@@ -162,7 +162,7 @@ class MenuBuilderDsl(val type: InventoryType) {
     }
 
     fun button(slot: Int, builder: @ButtonBuilderDslMarker ButtonBuilder.() -> Unit) {
-        buttons[slot] = button(builder)
+        buttons[slot] = net.craftoriya.packetuxui.menu.button.button(builder)
     }
 
     fun buildAllButtons(builder: @ButtonBuilderDslMarker ButtonBuilder.(Int) -> Unit) {

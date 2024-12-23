@@ -1,7 +1,7 @@
 package net.craftoriya.packetuxui.bukkit.controller
 
 import net.craftoriya.packetuxui.bukkit.extensions.toUser
-import net.craftoriya.packetuxui.service.menuService
+import net.craftoriya.packetuxui.menu.menu.menuService
 import net.craftoriya.packetuxui.user.UserManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

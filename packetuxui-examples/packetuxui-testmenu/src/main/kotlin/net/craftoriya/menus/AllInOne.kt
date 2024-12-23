@@ -6,12 +6,9 @@ import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
 import kotlinx.coroutines.delay
 import net.craftoriya.packetuxui.bukkit.extensions.toUser
 import net.craftoriya.packetuxui.common.toComponent
-import net.craftoriya.packetuxui.service.buildItem
-import net.craftoriya.packetuxui.service.cooldown
-import net.craftoriya.packetuxui.service.item
-import net.craftoriya.packetuxui.service.menu
+import net.craftoriya.packetuxui.menu.menu.MenuType
+import net.craftoriya.packetuxui.menu.menu.menu
 import net.craftoriya.packetuxui.state.intState
-import net.craftoriya.packetuxui.types.InventoryType
 import org.bukkit.Bukkit
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
@@ -44,7 +41,7 @@ class AllInOne {
         }
     }
 
-    val menu = menu(InventoryType.GENERIC9X4) {
+    val menu = menu(MenuType.GENERIC9X4) {
         name = "<gradient:#ff6d2e:#1e90ff><bold>Feature Showcase Menu".toComponent()
 
         var counter by intState(0).notNull()

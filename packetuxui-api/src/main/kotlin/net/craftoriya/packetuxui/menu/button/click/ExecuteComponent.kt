@@ -1,7 +1,8 @@
-package net.craftoriya.packetuxui.types
+package net.craftoriya.packetuxui.menu.button.click
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack
-import net.craftoriya.packetuxui.service.Menu
+import net.craftoriya.packetuxui.menu.button.ButtonType
+import net.craftoriya.packetuxui.menu.menu.Menu
 import net.craftoriya.packetuxui.user.User
 
 @DslMarker

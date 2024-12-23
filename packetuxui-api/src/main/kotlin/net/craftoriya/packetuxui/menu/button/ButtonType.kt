@@ -1,4 +1,4 @@
-package net.craftoriya.packetuxui.types
+package net.craftoriya.packetuxui.menu.button
 
 enum class ButtonType {
     RIGHT,

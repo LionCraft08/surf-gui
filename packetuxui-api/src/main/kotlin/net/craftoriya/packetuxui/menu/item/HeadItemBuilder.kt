@@ -1,4 +1,4 @@
-package net.craftoriya.packetuxui.service
+package net.craftoriya.packetuxui.menu.item
 
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemEnchantments

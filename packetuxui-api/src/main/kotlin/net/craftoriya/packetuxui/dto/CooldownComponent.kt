@@ -1,6 +1,6 @@
 package net.craftoriya.packetuxui.dto
 
-import net.craftoriya.packetuxui.types.ExecutableComponent
+import net.craftoriya.packetuxui.menu.button.click.ExecutableComponent
 import kotlin.math.max
 
 data class CooldownComponent(

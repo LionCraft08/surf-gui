@@ -1,7 +1,7 @@
 package net.craftoriya.packetuxui
 
 import com.github.retrooper.packetevents.PacketEvents
-import net.craftoriya.packetuxui.controller.PacketListener
+import net.craftoriya.packetuxui.listeners.PacketListener
 import net.craftoriya.packetuxui.user.User
 import java.util.*
 

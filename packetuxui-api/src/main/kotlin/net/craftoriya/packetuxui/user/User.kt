@@ -2,7 +2,7 @@ package net.craftoriya.packetuxui.user
 
 import com.github.retrooper.packetevents.PacketEvents
 import com.github.retrooper.packetevents.wrapper.PacketWrapper
-import net.craftoriya.packetuxui.service.Menu
+import net.craftoriya.packetuxui.menu.menu.Menu
 import net.kyori.adventure.text.Component
 import java.util.*
 import com.github.retrooper.packetevents.protocol.player.User as PacketUser

@@ -1,4 +1,4 @@
-package net.craftoriya.packetuxui.service
+package net.craftoriya.packetuxui.menu.menu
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
@@ -8,10 +8,11 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.objects.ObjectList
 import net.craftoriya.packetuxui.common.*
 import net.craftoriya.packetuxui.dto.AccumulatedDrag
-import net.craftoriya.packetuxui.types.ButtonType
+import net.craftoriya.packetuxui.menu.button.Button
+import net.craftoriya.packetuxui.menu.button.ButtonType
+import net.craftoriya.packetuxui.menu.button.click.ExecuteComponent
 import net.craftoriya.packetuxui.types.ClickData
 import net.craftoriya.packetuxui.types.ClickType
-import net.craftoriya.packetuxui.types.ExecuteComponent
 import net.craftoriya.packetuxui.user.User
 import java.util.*
 
