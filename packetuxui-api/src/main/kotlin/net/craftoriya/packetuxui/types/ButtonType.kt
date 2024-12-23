@@ -3,7 +3,7 @@ package net.craftoriya.packetuxui.types
 enum class ButtonType {
     RIGHT,
     LEFT,
-    F,
+    SWAP_ITEM,
     MIDDLE,
     SHIFT_LEFT,
     SHIFT_RIGHT,

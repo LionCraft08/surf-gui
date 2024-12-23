@@ -210,7 +210,7 @@ object MenuService {
             WindowClickType.SWAP -> {
                 when (packet.button) {
                     in 0..8 -> ClickData(ButtonType.entries[9 + packet.button], ClickType.PICKUP)
-                    40 -> ClickData(ButtonType.F, ClickType.PICKUP)
+                    40 -> ClickData(ButtonType.SWAP_ITEM, ClickType.PICKUP)
                     else -> ClickData(ButtonType.LEFT, ClickType.PLACE)
                 }
             }
