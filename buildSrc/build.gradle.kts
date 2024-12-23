@@ -5,6 +5,7 @@ plugins {
 repositories {
     mavenCentral()
     gradlePluginPortal()
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
@@ -15,4 +16,5 @@ dependencies {
     implementation(libs.run.paper)
     implementation(libs.run.velocity)
     implementation(libs.plugin.yml)
+    implementation(libs.paper.userdev)
 }

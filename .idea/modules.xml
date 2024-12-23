@@ -7,6 +7,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/packetuxui-bukkit/PacketUxUi.packetuxui-bukkit.test.iml" filepath="$PROJECT_DIR$/.idea/modules/packetuxui-bukkit/PacketUxUi.packetuxui-bukkit.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/packetuxui-examples/packetuxui-testmenu/PacketUxUi.packetuxui-examples.packetuxui-testmenu.main.iml" filepath="$PROJECT_DIR$/.idea/modules/packetuxui-examples/packetuxui-testmenu/PacketUxUi.packetuxui-examples.packetuxui-testmenu.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/packetuxui-examples/packetuxui-testmenu/PacketUxUi.packetuxui-examples.packetuxui-testmenu.test.iml" filepath="$PROJECT_DIR$/.idea/modules/packetuxui-examples/packetuxui-testmenu/PacketUxUi.packetuxui-examples.packetuxui-testmenu.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/packetuxui-nms/packetuxui-nms-1_21_1/PacketUxUi.packetuxui-nms.packetuxui-nms-1_21_1.main.iml" filepath="$PROJECT_DIR$/.idea/modules/packetuxui-nms/packetuxui-nms-1_21_1/PacketUxUi.packetuxui-nms.packetuxui-nms-1_21_1.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/packetuxui-nms/packetuxui-nms-1_21_1/PacketUxUi.packetuxui-nms.packetuxui-nms-1_21_1.test.iml" filepath="$PROJECT_DIR$/.idea/modules/packetuxui-nms/packetuxui-nms-1_21_1/PacketUxUi.packetuxui-nms.packetuxui-nms-1_21_1.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/packetuxui-nms/packetuxui-nms-common/PacketUxUi.packetuxui-nms.packetuxui-nms-common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/packetuxui-nms/packetuxui-nms-common/PacketUxUi.packetuxui-nms.packetuxui-nms-common.main.iml" />
     </modules>
   </component>
 </project>

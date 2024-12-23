@@ -26,6 +26,9 @@
             <option value="$PROJECT_DIR$/packetuxui-bukkit" />
             <option value="$PROJECT_DIR$/packetuxui-examples" />
             <option value="$PROJECT_DIR$/packetuxui-examples/packetuxui-testmenu" />
+            <option value="$PROJECT_DIR$/packetuxui-nms" />
+            <option value="$PROJECT_DIR$/packetuxui-nms/packetuxui-nms-1_21_1" />
+            <option value="$PROJECT_DIR$/packetuxui-nms/packetuxui-nms-common" />
           </set>
         </option>
       </GradleProjectSettings>

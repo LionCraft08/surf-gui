@@ -19,6 +19,7 @@ caffeine-courotines = "2.0.1"
 okhttp = "5.0.0-alpha.14"
 gson = "2.11.0"
 repoauth = "3.0.4"
+paper-userdev = "2.0.0-beta.8"
 
 [libraries]
 kotlin-jvm = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-jvm" }
@@ -48,3 +49,4 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-kotlin = { module = "com.squareup.okhttp3:okhttp-coroutines", version.ref = "okhttp" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 repoauth = { module = "org.hibernate.build.maven-repo-auth:org.hibernate.build.maven-repo-auth.gradle.plugin", version.ref = "repoauth" }
+paper-userdev = { module = "io.papermc.paperweight.userdev:io.papermc.paperweight.userdev.gradle.plugin", version.ref = "paper-userdev" }

@@ -2,6 +2,8 @@ package net.craftoriya.packetuxui
 
 import com.github.retrooper.packetevents.PacketEvents
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
+import net.craftoriya.packetuxui.bukkit.PacketUxUiBukkitApi
+import net.craftoriya.packetuxui.bukkit.commands.PacketUxUiCommand
 import net.craftoriya.packetuxui.bukkit.controller.BukkitListener
 import net.craftoriya.packetuxui.bukkit.user.BukkitUser
 import net.craftoriya.packetuxui.user.UserManager
@@ -18,11 +20,16 @@ class PacketUxUiPlugin : JavaPlugin() {
     }
 
     override fun onEnable() {
-        PacketUxUiApi.init()
+        PacketUxUiBukkitApi.init()
+
+        // Listeners
         Bukkit.getPluginManager().registerEvents(BukkitListener, plugin)
+
+        // Commands
+        PacketUxUiCommand
     }
 
     override fun onDisable() {
-        PacketUxUiApi.terminate()
+        PacketUxUiBukkitApi.terminate()
     }
 }

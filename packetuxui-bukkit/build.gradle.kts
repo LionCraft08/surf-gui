@@ -2,6 +2,7 @@ plugins {
     `common-conventions`
     `shadow-conventions`
     `bukkit-conventions`
+    `bukkit-server-conventions`
 }
 
 paper {
@@ -21,4 +22,7 @@ dependencies {
     paperLibrary(libs.okhttp.kotlin)
     paperLibrary(libs.caffeine.courotines)
     paperLibrary(libs.gson)
+
+    // NMS
+    api(project(":packetuxui-nms:packetuxui-nms-1_21_1"))
 }

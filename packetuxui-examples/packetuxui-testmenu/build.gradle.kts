@@ -4,6 +4,7 @@ plugins {
     `common-conventions`
     `bukkit-conventions`
     `shadow-conventions`
+    `bukkit-server-conventions`
 }
 
 dependencies {
