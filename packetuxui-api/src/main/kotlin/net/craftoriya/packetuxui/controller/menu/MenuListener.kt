@@ -18,8 +18,8 @@ object MenuListener {
 
         if (packetType == PacketType.Play.Client.CLOSE_WINDOW) {
             menuService.onCloseMenu(user)
-            menuService.clearAccumulatedDrag(user)
         }
+
         if (packetType != PacketType.Play.Client.CLICK_WINDOW) return
         val packet = WrapperPlayClientClickWindow(event)
         if (menuService.shouldIgnore(packet.windowId, user)) return
