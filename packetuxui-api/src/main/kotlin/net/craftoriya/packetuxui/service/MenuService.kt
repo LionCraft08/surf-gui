@@ -30,14 +30,21 @@ object MenuService {
 
     fun openMenu(user: User, menu: Menu) {
         viewers[user] = menu.copy()
-        user.sendPacket(menu.menuPacket)
-        user.sendPacket(menu.contentPacket)
+
+        menu.open(user)
     }
 
     fun onCloseMenu(user: User) {
-        viewers.remove(user)
+        val menu = viewers.remove(user)
         carriedItem.remove(user)
         clearAccumulatedDrag(user)
+
+        val viewersOfMenu = viewers.filterValues { it == menu }.keys
+
+        if (viewersOfMenu.isEmpty()) {
+            println("Menu closed. $menu")
+            menu?.close()
+        }
     }
 
     fun handleClickInventory(user: User, packet: WrapperPlayClientClickWindow) {

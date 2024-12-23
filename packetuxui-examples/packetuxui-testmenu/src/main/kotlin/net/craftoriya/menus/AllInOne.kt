@@ -3,11 +3,16 @@ package net.craftoriya.menus
 import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.protocol.item.enchantment.type.EnchantmentTypes
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
+import kotlinx.coroutines.delay
+import net.craftoriya.packetuxui.bukkit.extensions.getMenu
+import net.craftoriya.packetuxui.bukkit.extensions.updateItem
 import net.craftoriya.packetuxui.common.toComponent
 import net.craftoriya.packetuxui.service.*
 import net.craftoriya.packetuxui.state.intState
 import net.craftoriya.packetuxui.types.InventoryType
+import org.bukkit.Bukkit
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.seconds
 
 class AllInOne {
     private val stone: ItemStack = ItemStack.builder().type(ItemTypes.STONE).build()
@@ -15,23 +20,23 @@ class AllInOne {
     private val updateButtons = listOf(2, 4, 6, 8, 10)
 
     fun startUpdate() {
-//        plugin.launch { // This job is not stopped when the menu closes
-//            while (true) {
-//                println("tick")
-//                for (player in Bukkit.getOnlinePlayers()) {
-//                    if (menuService.getMenu(player)?.name == menu.name) {
-//                        for (slot in updateButtons) {
-//                            if (chance(20)) {
-//                                val item = if (chance(50)) stone else air
-//                                menuService.updateItem(player, item, slot)
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                delay(200)
-//            }
-//        }
+        menu.launchJob {
+            while (true) {
+                println("tick")
+                for (player in Bukkit.getOnlinePlayers()) {
+                    if (menuService.getMenu(player)?.name == menu.name) {
+                        for (slot in updateButtons) {
+                            if (chance(20)) {
+                                val item = if (chance(50)) stone else air
+                                menuService.updateItem(player, item, slot)
+                            }
+                        }
+                    }
+                }
+
+                delay(1.seconds)
+            }
+        }
     }
 
     val menu = menu(InventoryType.GENERIC9X4) {
