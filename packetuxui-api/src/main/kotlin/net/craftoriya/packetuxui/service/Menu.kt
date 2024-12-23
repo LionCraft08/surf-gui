@@ -32,29 +32,24 @@ open class Menu(
 
     private var menuScope = CoroutineScope(coroutineScope.coroutineContext + SupervisorJob())
     private val blocks = mutableObjectListOf<MenuJob>()
-    private var needsRescope = false
+    private var shouldRelaunch = false
 
     init {
         check(buttons.size <= type.size) { "Too many items in menu" }
     }
 
     fun launchJob(block: MenuJob) {
-        menuScope.launch {
-            block()
-        }
-
+        menuScope.launch { block() }
         blocks.add(block)
     }
 
     suspend fun open(user: User) {
-        if (needsRescope) {
-            needsRescope = false
+        if (shouldRelaunch) {
+            shouldRelaunch = false
             menuScope = CoroutineScope(coroutineScope.coroutineContext + SupervisorJob())
 
             for (block in blocks) {
-                menuScope.launch {
-                    block()
-                }
+                menuScope.launch { block() }
             }
         }
 
@@ -115,7 +110,7 @@ open class Menu(
 
     private fun destroy() {
         menuScope.cancel()
-        needsRescope = true
+        shouldRelaunch = true
 
         println("Destroying menu ${name.toPlain()}")
 

@@ -86,7 +86,8 @@ object MenuService {
                     user,
                     clickData.buttonType,
                     slot,
-                    carriedItem
+                    carriedItem,
+                    menu
                 )
             )
         }

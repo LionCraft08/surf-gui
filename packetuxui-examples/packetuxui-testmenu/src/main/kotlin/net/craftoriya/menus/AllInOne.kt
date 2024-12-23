@@ -49,11 +49,15 @@ class AllInOne {
 
         var counter by intState(0).notNull()
 
+
+
         buildAllButtons { slot ->
             when {
                 slot in updateButtons -> {
                     item(stone)
-//                    click { updateItem(it.user, air, slot) } TODO: How do i do this?
+                    click { (user, _, slot, _, menu) ->
+                        menu.updateItem(user, slot, air)
+                    }
                 }
 
                 slot % 9 == 0 -> {
