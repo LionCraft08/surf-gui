@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.util.Properties
 
 plugins {
     `maven-publish`
@@ -6,6 +7,15 @@ plugins {
     id("com.gradleup.shadow")
     id("org.hibernate.build.maven-repo-auth")
 }
+
+val customProperties = Properties().apply {
+    rootProject.file("repo.properties").takeIf { it.exists() }?.reader()?.use { load(it) }
+}
+
+val mavenRepoUrl: String = customProperties["mavenSnapshotRepoUrl"]?.toString()
+    ?: error("Missing mavenSnapshotRepoUrl")
+val mavenRepoName: String = customProperties["mavenSnapshotRepoName"]?.toString()
+    ?: error("Missing mavenSnapshotRepoName")
 
 tasks.withType<ShadowJar> {
     mergeServiceFiles()
@@ -31,8 +41,8 @@ publishing {
     }
 
     repositories {
-        maven(System.getenv("MAVEN_SNAPSHOT_REPOSITORY_URL")) {
-            name = System.getenv("MAVEN_SNAPSHOT_REPOSITORY_NAME")
+        maven(mavenRepoUrl) {
+            name = mavenRepoName
         }
     }
 }
