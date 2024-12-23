@@ -3,11 +3,15 @@ package net.craftoriya.packetuxui
 import com.github.retrooper.packetevents.PacketEvents
 import net.craftoriya.packetuxui.controller.PacketListener
 import net.craftoriya.packetuxui.user.User
+import java.util.*
+
+internal val api get() = PacketUxUiApi.getInstance()
 
 abstract class PacketUxUiApi {
 
     private var initialized = false
 
+    abstract fun createNewUser(uuid: UUID): User
     abstract suspend fun getNextContainerId(user: User): Int
 
     fun init() {
@@ -31,6 +35,22 @@ abstract class PacketUxUiApi {
         if (!initialized) return
 
         initialized = false
+    }
+
+    companion object {
+        private var instance: PacketUxUiApi? = null
+
+        fun getInstance(): PacketUxUiApi {
+            if (instance == null) {
+                throw IllegalStateException("PacketUxUiApi has not been initialized yet.")
+            }
+
+            return instance!!
+        }
+
+        fun setInstance(api: PacketUxUiApi) {
+            instance = api
+        }
     }
 }
 
