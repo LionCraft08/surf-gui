@@ -1,16 +1,19 @@
 package net.craftoriya.packetuxui.user
 
 import com.github.retrooper.packetevents.PacketEvents
-import com.github.retrooper.packetevents.protocol.player.User as PacketUser
 import com.github.retrooper.packetevents.wrapper.PacketWrapper
+import net.craftoriya.packetuxui.service.Menu
 import net.kyori.adventure.text.Component
 import java.util.*
+import com.github.retrooper.packetevents.protocol.player.User as PacketUser
 
 interface User {
 
     val uuid: UUID
     val packetUser: PacketUser?
     val player: Any?
+
+    fun getActiveMenu(): Menu?
 
     fun updateInventory()
 

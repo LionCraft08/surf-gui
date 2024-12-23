@@ -12,7 +12,9 @@ abstract class PacketUxUiApi {
     private var initialized = false
 
     abstract fun createNewUser(uuid: UUID): User
+
     abstract suspend fun getNextContainerId(user: User): Int
+    abstract suspend fun hasOpenedContainer(user: User): Boolean
 
     fun init() {
         if (initialized) return

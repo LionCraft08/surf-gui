@@ -5,7 +5,7 @@ import net.craftoriya.packetuxui.dto.CooldownComponent
 import net.craftoriya.packetuxui.types.ExecutableComponent
 
 data class Button(
-    val item: ItemStack,
+    var item: ItemStack,
     val execute: ExecutableComponent? = null,
     val cooldown: CooldownComponent
 )

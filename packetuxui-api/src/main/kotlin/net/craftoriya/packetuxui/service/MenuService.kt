@@ -4,13 +4,9 @@ import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindow
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindow.WindowClickType
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSetSlot
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowItems
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.objects.ObjectList
-import net.craftoriya.packetuxui.common.mutableObject2ObjectMapOf
-import net.craftoriya.packetuxui.common.mutableObjectListOf
-import net.craftoriya.packetuxui.common.synchronize
+import net.craftoriya.packetuxui.common.*
 import net.craftoriya.packetuxui.dto.AccumulatedDrag
 import net.craftoriya.packetuxui.types.ButtonType
 import net.craftoriya.packetuxui.types.ClickData
@@ -23,32 +19,28 @@ val menuService = MenuService
 
 object MenuService {
 
-    private val viewers = mutableObject2ObjectMapOf<User, Menu>().synchronize()
+    private val _menus = mutableObjectSetOf<Menu>()
     private val carriedItem = mutableObject2ObjectMapOf<User, ItemStack>().synchronize()
     private val accumulatedDrag =
         mutableObject2ObjectMapOf<User, ObjectList<AccumulatedDrag>>().synchronize()
 
-    fun openMenu(user: User, menu: Menu) {
-        viewers[user] = menu.copy()
+    val menus = _menus.freeze()
 
-        menu.open(user)
+    fun addMenu(menu: Menu) {
+        _menus.add(menu)
+    }
+
+    fun removeMenu(menu: Menu) {
+        _menus.remove(menu)
     }
 
     fun onCloseMenu(user: User) {
-        val menu = viewers.remove(user)
         carriedItem.remove(user)
         clearAccumulatedDrag(user)
-
-        val viewersOfMenu = viewers.filterValues { it == menu }.keys
-
-        if (viewersOfMenu.isEmpty()) {
-            println("Menu closed. $menu")
-            menu?.close()
-        }
     }
 
     fun handleClickInventory(user: User, packet: WrapperPlayClientClickWindow) {
-        val menu = viewers[user] ?: error("Menu under user key not found.")
+        val menu = user.getActiveMenu() ?: error("Menu not found for container id.")
         val clickData = getClickType(packet)
 
         updateCarriedItem(user, packet.carriedItemStack, clickData.clickType)
@@ -66,14 +58,11 @@ object MenuService {
         }
 
         val carriedItem = carriedItem[user]
-        val menu = viewers[user] ?: error("Menu under user key not found.")
-
-        val menuContentPacket =
-            WrapperPlayServerWindowItems(126, 0, menu.contentPacket.items, carriedItem)
+        val menu = user.getActiveMenu() ?: error("Menu under user key not found.")
 
         val button = menu.buttons[slot]
         if (button == null) {
-            user.sendPacket(menuContentPacket)
+            menu.sendWindowItems(user, carriedItem)
             return
         }
 
@@ -89,7 +78,8 @@ object MenuService {
             button.execute
         }
 
-        user.sendPacket(menuContentPacket)
+        menu.sendWindowItems(user, carriedItem)
+
         execute?.let {
             it(
                 ExecuteComponent(
@@ -102,71 +92,30 @@ object MenuService {
         }
     }
 
-    fun updateItem(user: User, item: ItemStack, slot: Int) {
-        val menu = getMenu(user) ?: return
-        require(slot in 0..menu.type.lastIndex) { "Slot out of range." }
-
-        val items = menu.contentPacket.items.toMutableList()
-        items[slot] = item
-        menu.contentPacket = WrapperPlayServerWindowItems(126, 0, items, null)
-
-        user.sendPacket(WrapperPlayServerSetSlot(126, 0, slot, item))
-    }
-
-    fun updateItems(user: User, newItems: Int2ObjectMap<ItemStack>) {
-        val menu = getMenu(user) ?: return
-        require(newItems.keys.any { it in 0..menu.type.lastIndex }) { "Slot out of range." }
-
-        val items = menu.contentPacket.items.toMutableList()
-        newItems.forEach { (slot, item) ->
-            items[slot] = item
-        }
-        menu.contentPacket = WrapperPlayServerWindowItems(126, 0, items, null)
-
-        for ((slot, item) in newItems) {
-            user.sendPacket(WrapperPlayServerSetSlot(126, 0, slot, item))
-        }
-    }
-
     fun updateButton(user: User, newButton: Button, slot: Int) {
-        val menu = getMenu(user) ?: return
+        val menu = user.getActiveMenu() ?: return
         require(slot in 0..menu.type.lastIndex) { "Slot out of range." }
 
-        menu.buttons[slot] = newButton
-        val items = menu.contentPacket.items.toMutableList()
-        items[slot] = newButton.item
-        menu.contentPacket = WrapperPlayServerWindowItems(126, 0, items, null)
-
-        user.sendPacket(WrapperPlayServerSetSlot(126, 0, slot, newButton.item))
+        menu.updateButton(user, slot, newButton)
     }
 
     fun updateButtons(user: User, newButtons: Int2ObjectMap<Button>) {
-        val menu = getMenu(user) ?: return
+        val menu = user.getActiveMenu() ?: return
         require(newButtons.keys.any { it in 0..menu.type.lastIndex }) { "Slot out of range." }
 
         menu.buttons.clear()
         menu.buttons.putAll(newButtons)
-        val items = MutableList(menu.type.lastIndex) { index ->
-            newButtons[index]?.item ?: ItemStack.EMPTY
-        }
-        menu.contentPacket = WrapperPlayServerWindowItems(126, 0, items, null)
 
-        for ((slot, button) in newButtons) {
-            user.sendPacket(WrapperPlayServerSetSlot(126, 0, slot, button.item))
-        }
+        menu.sendWindowItems(user, null)
+        menu.updateSlots(user)
     }
-
-    fun getMenu(user: User): Menu? = viewers[user]
-
-
-    fun shouldIgnore(id: Int, user: User): Boolean = id != 126 || !viewers.containsKey(user)
 
     fun isMenuClick(
         wrapper: WrapperPlayClientClickWindow,
         clickType: ClickType,
         user: User
     ): Boolean {
-        val menu = viewers[user] ?: error("Menu under user key not found.")
+        val menu = user.getActiveMenu() ?: return false
         val slotRange = 0..menu.type.lastIndex
 
         return when (clickType) {
@@ -255,7 +204,6 @@ object MenuService {
         }
     }
 
-
     fun accumulateDrag(user: User, packet: WrapperPlayClientClickWindow, type: ClickType) {
         accumulatedDrag.computeIfAbsent(user) { mutableObjectListOf() }
             .add(AccumulatedDrag(packet, type))
@@ -278,13 +226,18 @@ object MenuService {
         slotOffset: Int
     ): WrapperPlayClientClickWindow {
         return WrapperPlayClientClickWindow(
-            0, originalPacket.stateId, originalPacket.slot + slotOffset, originalPacket.button,
-            originalPacket.actionNumber, originalPacket.windowClickType,
-            Optional.of(mutableMapOf()), originalPacket.carriedItemStack
+            originalPacket.windowId,
+            originalPacket.stateId,
+            originalPacket.slot + slotOffset,
+            originalPacket.button,
+            originalPacket.actionNumber,
+            originalPacket.windowClickType,
+            Optional.of(mutableMapOf()),
+            originalPacket.carriedItemStack
         )
     }
 
-    fun clearAccumulatedDrag(user: User) {
+    private fun clearAccumulatedDrag(user: User) {
         accumulatedDrag[user]?.clear()
     }
 
@@ -298,7 +251,7 @@ object MenuService {
         }
 
         return WrapperPlayClientClickWindow(
-            0, packet.stateId, slotOffset, packet.button,
+            packet.windowId, packet.stateId, slotOffset, packet.button,
             packet.actionNumber, packet.windowClickType,
             Optional.of(adjustedSlots), packet.carriedItemStack
         )
@@ -313,6 +266,7 @@ object MenuService {
             carriedItem.remove(user)
             return
         }
+
         when (clickType) {
             ClickType.PICKUP, ClickType.PICKUP_ALL, ClickType.DRAG_START, ClickType.DRAG_END -> {
                 carriedItem[user] = carriedItemStack

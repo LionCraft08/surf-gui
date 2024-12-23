@@ -15,4 +15,7 @@ object PacketUxUiBukkitApi : PacketUxUiApi() {
 
     override suspend fun getNextContainerId(user: User) =
         BukkitContainerHelper.getNextContainerId(user)
+
+    override suspend fun hasOpenedContainer(user: User) =
+        BukkitContainerHelper.hasOpenedContainer(user)
 }

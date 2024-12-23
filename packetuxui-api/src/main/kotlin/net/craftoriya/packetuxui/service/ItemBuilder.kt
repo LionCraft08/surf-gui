@@ -73,7 +73,7 @@ open class ItemBuilder {
         this.enchantVisibility = visible
     }
 
-    fun cmd(cmd: Int) = apply { this.modelData = cmd }
+    fun customModelData(cmd: Int) = apply { this.modelData = cmd }
 
     open fun build(): ItemStack {
         val item = ItemStack.builder()

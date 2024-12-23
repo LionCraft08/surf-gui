@@ -14,4 +14,11 @@ object ContainerHelper1_21_4 : ContainerHelper {
         return craftPlayer.handle.nextContainerCounter()
     }
 
+    override fun hasOpenedContainer(user: User): Boolean {
+        val player = Bukkit.getPlayer(user.uuid) ?: return false
+        val craftPlayer = player as CraftPlayer
+
+        return craftPlayer.handle.hasContainerOpen()
+    }
+
 }

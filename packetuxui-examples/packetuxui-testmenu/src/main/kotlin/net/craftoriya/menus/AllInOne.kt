@@ -4,10 +4,12 @@ import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.protocol.item.enchantment.type.EnchantmentTypes
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
 import kotlinx.coroutines.delay
-import net.craftoriya.packetuxui.bukkit.extensions.getMenu
-import net.craftoriya.packetuxui.bukkit.extensions.updateItem
+import net.craftoriya.packetuxui.bukkit.extensions.toUser
 import net.craftoriya.packetuxui.common.toComponent
-import net.craftoriya.packetuxui.service.*
+import net.craftoriya.packetuxui.service.buildItem
+import net.craftoriya.packetuxui.service.cooldown
+import net.craftoriya.packetuxui.service.item
+import net.craftoriya.packetuxui.service.menu
 import net.craftoriya.packetuxui.state.intState
 import net.craftoriya.packetuxui.types.InventoryType
 import org.bukkit.Bukkit
@@ -24,11 +26,14 @@ class AllInOne {
             while (true) {
                 println("tick")
                 for (player in Bukkit.getOnlinePlayers()) {
-                    if (menuService.getMenu(player)?.name == menu.name) {
+                    val user = player.toUser()
+
+                    if (user.getActiveMenu()?.name == menu.name) {
                         for (slot in updateButtons) {
                             if (chance(20)) {
                                 val item = if (chance(50)) stone else air
-                                menuService.updateItem(player, item, slot)
+
+                                menu.updateItem(user, slot, item)
                             }
                         }
                     }
@@ -48,7 +53,7 @@ class AllInOne {
             when {
                 slot in updateButtons -> {
                     item(stone)
-                    click { menuService.updateItem(it.user, air, slot) }
+//                    click { updateItem(it.user, air, slot) } TODO: How do i do this?
                 }
 
                 slot % 9 == 0 -> {
@@ -63,11 +68,11 @@ class AllInOne {
 
                         counter++
 
-                        menuService.updateItem(it.user, buildItem {
-                            itemType = ItemTypes.GLOWSTONE
-                            name = "<yellow><bold>Glowing Stone".toComponent()
-                            amount = counter
-                        }.build().item, slot)
+//                        menuService.updateItem(it.user, buildItem {
+//                            itemType = ItemTypes.GLOWSTONE
+//                            name = "<yellow><bold>Glowing Stone".toComponent()
+//                            amount = counter
+//                        }.build().item, slot)
                     }
                 }
 

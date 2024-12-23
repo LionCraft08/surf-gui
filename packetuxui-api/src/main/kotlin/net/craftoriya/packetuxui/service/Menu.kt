@@ -2,38 +2,41 @@ package net.craftoriya.packetuxui.service
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerOpenWindow
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSetSlot
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowItems
 import kotlinx.coroutines.*
-import net.craftoriya.packetuxui.common.mutableInt2ObjectMapOf
-import net.craftoriya.packetuxui.common.mutableObjectListOf
-import net.craftoriya.packetuxui.common.synchronize
+import net.craftoriya.packetuxui.api
+import net.craftoriya.packetuxui.common.*
 import net.craftoriya.packetuxui.dto.CooldownComponent
 import net.craftoriya.packetuxui.types.ExecutableComponent
 import net.craftoriya.packetuxui.types.ExecutableComponentMarker
 import net.craftoriya.packetuxui.types.InventoryType
+import net.craftoriya.packetuxui.user.AbstractUser
 import net.craftoriya.packetuxui.user.User
 import net.kyori.adventure.text.Component
 
 typealias MenuJob = suspend CoroutineScope.() -> Unit
+
+fun findMatchingMenu(user: User, containerId: Int) =
+    menuService.menus.find { it.getContainerId(user) == containerId }
 
 open class Menu(
     val name: Component,
     val type: InventoryType,
     buttons: Map<Int, Button>,
     val cooldown: CooldownComponent = CooldownComponent(),
-    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
     val buttons = mutableInt2ObjectMapOf(buttons).synchronize()
-    var needsRescope = false
-
-    @Volatile
-    var contentPacket: WrapperPlayServerWindowItems
-
-    @Volatile
-    var menuPacket: WrapperPlayServerOpenWindow
+    val viewers = mutableObject2IntMapOf<User>().synchronize()
 
     private var menuScope = CoroutineScope(coroutineScope.coroutineContext + SupervisorJob())
     private val blocks = mutableObjectListOf<MenuJob>()
+    private var needsRescope = false
+
+    init {
+        check(buttons.size <= type.size) { "Too many items in menu" }
+    }
 
     fun launchJob(block: MenuJob) {
         menuScope.launch {
@@ -43,10 +46,11 @@ open class Menu(
         blocks.add(block)
     }
 
-    fun open(user: User) {
+    suspend fun open(user: User) {
         if (needsRescope) {
             needsRescope = false
-            
+            menuScope = CoroutineScope(coroutineScope.coroutineContext + SupervisorJob())
+
             for (block in blocks) {
                 menuScope.launch {
                     block()
@@ -54,28 +58,91 @@ open class Menu(
             }
         }
 
-        user.sendPacket(menuPacket)
-        user.sendPacket(contentPacket)
+        val containerId = api.getNextContainerId(user)
+
+        viewers.put(user, containerId)
+        (user as AbstractUser).setActiveMenu(this)
+
+        user.sendPacket(WrapperPlayServerOpenWindow(containerId, type.id(), name))
+        sendWindowItems(user)
+
+        menuService.addMenu(this)
     }
 
-    fun close() {
-        menuScope.cancel()
-        needsRescope = true
+    fun updateItem(user: User, slot: Int, item: ItemStack) {
+        buttons[slot].item = item
+
+        sendWindowItems(user)
     }
 
-    fun copy(): Menu {
-        return Menu(name, type, buttons, cooldown)
+    fun updateButton(user: User, slot: Int, button: Button) {
+        buttons[slot] = button
+
+        sendWindowItems(user)
     }
 
-    init {
+    fun sendWindowItems(user: User, carriedItem: ItemStack? = null) {
+        val containerId = getContainerId(user) ?: return
+
         val items = MutableList(type.size) { index ->
             this.buttons[index]?.item ?: ItemStack.EMPTY
         }
-        check(buttons.size <= type.size) { "Too many items in menu" }
 
-        menuPacket = WrapperPlayServerOpenWindow(126, type.id(), name)
-        contentPacket = WrapperPlayServerWindowItems(126, 0, items, null)
+        user.sendPacket(WrapperPlayServerWindowItems(containerId, 0, items, carriedItem))
     }
+
+    fun updateSlots(user: User) {
+        val containerId = getContainerId(user) ?: return
+
+        for ((slot, button) in buttons) {
+            user.sendPacket(WrapperPlayServerSetSlot(containerId, 0, slot, button.item))
+        }
+    }
+
+    suspend fun close(user: User) {
+        viewers.removeInt(user)
+
+        val hasOpenedContainer = api.hasOpenedContainer(user)
+
+        if (!hasOpenedContainer) {
+            (user as AbstractUser).setActiveMenu(null)
+        }
+
+        if (viewers.isEmpty()) {
+            destroy()
+        }
+    }
+
+    private fun destroy() {
+        menuScope.cancel()
+        needsRescope = true
+
+        println("Destroying menu ${name.toPlain()}")
+
+        menuService.removeMenu(this)
+    }
+
+    fun getContainerId(user: User): Int? {
+        return viewers.getInt(user)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Menu
+
+        return name == other.name && type == other.type
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode() + type.hashCode()
+    }
+
+    override fun toString(): String {
+        return "Menu(name=${name.toPlain()}, type=$type, buttons=${buttons.size}, viewers=$viewers)"
+    }
+
 }
 
 @Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
