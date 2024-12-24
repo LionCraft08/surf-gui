@@ -6,9 +6,10 @@ import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
 import kotlinx.coroutines.delay
 import net.craftoriya.packetuxui.bukkit.extensions.toUser
 import net.craftoriya.packetuxui.common.toComponent
+import net.craftoriya.packetuxui.menu.button.ButtonBuilder
+import net.craftoriya.packetuxui.menu.button.buttons.SwitchButton
 import net.craftoriya.packetuxui.menu.menu.MenuType
 import net.craftoriya.packetuxui.menu.menu.menu
-import net.craftoriya.packetuxui.state.intState
 import org.bukkit.Bukkit
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
@@ -17,6 +18,22 @@ class AllInOne {
     private val stone: ItemStack = ItemStack.builder().type(ItemTypes.STONE).build()
     private val air: ItemStack = ItemStack.builder().type(ItemTypes.AIR).build()
     private val updateButtons = listOf(2, 4, 6, 8, 10)
+
+    private val greenStateButton = ButtonBuilder().apply {
+        item(ItemStack.builder().type(ItemTypes.GREEN_WOOL).build())
+
+        click { (user, _, _, _, _) ->
+            user.sendMessage("<green>Green state button clicked!".toComponent())
+        }
+    }.build()
+
+    private val redStateButton = ButtonBuilder().apply {
+        item(ItemStack.builder().type(ItemTypes.RED_WOOL).build())
+
+        click { (user, _, _, _, _) ->
+            user.sendMessage("<red>Red state button clicked!".toComponent())
+        }
+    }.build()
 
     fun startUpdate() {
         menu.launchJob {
@@ -44,10 +61,6 @@ class AllInOne {
     val menu = menu(MenuType.GENERIC9X4) {
         name = "<gradient:#ff6d2e:#1e90ff><bold>Feature Showcase Menu".toComponent()
 
-        var counter by intState(0).notNull()
-
-
-
         buildAllButtons { slot ->
             when {
                 slot in updateButtons -> {
@@ -57,17 +70,15 @@ class AllInOne {
                     }
                 }
 
-                slot % 9 == 0 -> {
+                slot % 9 == 0 && slot != 0 -> {
                     buildItem {
                         itemType = ItemTypes.GLOWSTONE
                         name = "<yellow><bold>Glowing Stone".toComponent()
-                        amount = counter
                     }
                     click {
                         it.user.sendMessage("<green>You clicked on the glowing button!".toComponent())
                         it.user.sendMessage("Button type: ${it.buttonType}".toComponent())
 
-                        counter++
 
 //                        menuService.updateItem(it.user, buildItem {
 //                            itemType = ItemTypes.GLOWSTONE
@@ -120,6 +131,16 @@ class AllInOne {
         cooldown(delay = 6000, freeze = 1200) {
             it.user.sendMessage("<yellow>Menu is on cooldown!".toComponent())
         }
+        
+        button(
+            0, SwitchButton(
+                states = listOf(greenStateButton, redStateButton),
+                defaultState = greenStateButton,
+                onStateChange = { fromState, toState ->
+                    println("Switched from ${fromState.item.type.name} to ${toState.item.type.name}")
+                }
+            )
+        )
     }
 
     private fun chance(percent: Int): Boolean {
