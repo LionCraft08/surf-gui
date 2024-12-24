@@ -1,4 +1,4 @@
-package net.craftoriya.packetuxui.menu.page
+package net.craftoriya.packetuxui.menu.menu.page
 
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes
 import com.github.retrooper.packetevents.protocol.item.ItemStack

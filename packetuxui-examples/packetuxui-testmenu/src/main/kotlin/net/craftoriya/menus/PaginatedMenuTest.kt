@@ -6,7 +6,7 @@ import net.craftoriya.packetuxui.bukkit.extensions.toPlayer
 import net.craftoriya.packetuxui.menu.button.Button
 import net.craftoriya.packetuxui.menu.item.ItemBuilder
 import net.craftoriya.packetuxui.menu.menu.MenuType
-import net.craftoriya.packetuxui.menu.page.PaginatedMenu
+import net.craftoriya.packetuxui.menu.menu.page.PaginatedMenu
 import net.craftoriya.packetuxui.menu.utils.slot
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
