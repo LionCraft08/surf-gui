@@ -6,6 +6,7 @@ import dev.jorel.commandapi.executors.PlayerCommandExecutor
 import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.stringArgument
 import net.craftoriya.menus.AllInOne
+import net.craftoriya.menus.PaginatedMenuTest
 import net.craftoriya.packetuxui.bukkit.extensions.toUser
 import net.craftoriya.plugin
 
@@ -25,11 +26,13 @@ object OpenMenuCommand {
                 val menuName = args["menu"] as String
                 val menuClass = when (menuName) {
                     "all_in_one" -> AllInOne()
+                    "paginated" -> PaginatedMenuTest()
                     else -> null
                 }
 
                 val menu = when (menuClass) {
                     is AllInOne -> menuClass.menu
+                    is PaginatedMenuTest -> menuClass
                     else -> null
                 }
 
