@@ -128,7 +128,7 @@ class AllInOne {
             }
         }
 
-        cooldown(delay = 6000, freeze = 1200) {
+        menuCooldown(delay = 6000, freeze = 1200) {
             it.user.sendMessage("<yellow>Menu is on cooldown!".toComponent())
         }
         

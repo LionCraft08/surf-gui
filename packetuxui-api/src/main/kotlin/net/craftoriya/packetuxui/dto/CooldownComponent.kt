@@ -8,6 +8,9 @@ data class CooldownComponent(
     val freeze: Long = 0,
     val execute: ExecutableComponent? = null,
 ) {
+    companion object {
+        val EMPTY = CooldownComponent()
+    }
 
     private var expireTime: Long = 0
     private var expireFreeze: Long = 0

@@ -13,6 +13,11 @@ import net.craftoriya.packetuxui.common.toObjectArrayList
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextDecoration
 
+@DslMarker
+@Target(AnnotationTarget.CLASS, AnnotationTarget.TYPE)
+annotation class ItemBuilderDslMarker
+
+@ItemBuilderDslMarker
 open class ItemBuilder {
     var itemType: ItemType = ItemTypes.AIR
     var name: Component? = null
@@ -96,3 +101,9 @@ open class ItemBuilder {
         return item.build()
     }
 }
+
+fun ItemBuilder(itemType: ItemType, builder: ItemBuilder.() -> Unit): ItemStack =
+    ItemBuilder().apply {
+        itemType(itemType)
+        builder()
+    }.build()

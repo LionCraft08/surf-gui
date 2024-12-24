@@ -6,6 +6,7 @@ import net.craftoriya.packetuxui.menu.button.click.ExecutableComponent
 import net.craftoriya.packetuxui.menu.button.click.ExecutableComponentMarker
 import net.craftoriya.packetuxui.menu.item.ItemBuilder
 
+@ButtonBuilderDslMarker
 class ButtonBuilder {
 
     private var item: ItemStack = ItemStack.EMPTY
@@ -39,9 +40,9 @@ class ButtonBuilder {
 
 }
 
-@Target(AnnotationTarget.TYPE)
+@Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
 @DslMarker
 annotation class ButtonBuilderDslMarker
 
-fun button(builder: @ButtonBuilderDslMarker ButtonBuilder.() -> Unit): Button =
+fun Button(builder: @ButtonBuilderDslMarker ButtonBuilder.() -> Unit): Button =
     ButtonBuilder().apply(builder).build()

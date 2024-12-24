@@ -2,6 +2,7 @@ package net.craftoriya.packetuxui.menu.utils
 
 import it.unimi.dsi.fastutil.objects.ObjectSet
 import net.craftoriya.packetuxui.common.objectSetOf
+import net.craftoriya.packetuxui.menu.menu.MenuBuilderDsl
 import net.craftoriya.packetuxui.menu.menu.MenuType
 
 /**
@@ -54,6 +55,8 @@ class SlotRange(
      * @return The total number of slots from `start` to `endInclusive`.
      */
     fun size(): Int = endInclusive.toSlot() - start.toSlot() + 1
+
+    fun compatibleWith(menuType: MenuType): Boolean = start.fits(menuType) && endInclusive.fits(menuType) && size() <= menuType.size
 }
 
 /**
@@ -227,5 +230,9 @@ data class Slot(
 }
 
 fun slot(x: Int, y: Int, gridWidth: Int = 9) = Slot(x, y, gridWidth)
+fun slot(absolute: Int, gridWidth: Int = 9) = Slot(absolute, gridWidth)
 infix fun Int.at(y: Int) = Slot(this, y)
 infix fun Slot.width(width: Int) = copy(gridWidth = width)
+
+fun MenuBuilderDsl.slot(x: Int, y: Int) = Slot(x, y, this.type.size)
+fun MenuBuilderDsl.slot(absolute: Int) = Slot(absolute, this.type.size)
