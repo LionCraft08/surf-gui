@@ -10,8 +10,10 @@ import net.craftoriya.packetuxui.api
 import net.craftoriya.packetuxui.common.*
 import net.craftoriya.packetuxui.dto.CooldownComponent
 import net.craftoriya.packetuxui.menu.button.Button
-import net.craftoriya.packetuxui.menu.button.ButtonBuilder
 import net.craftoriya.packetuxui.menu.button.ButtonBuilderDslMarker
+import net.craftoriya.packetuxui.menu.button.ButtonDslBuilder
+import net.craftoriya.packetuxui.menu.button.buttons.SwitchButton
+import net.craftoriya.packetuxui.menu.button.buttons.SwitchButtonDslBuilder
 import net.craftoriya.packetuxui.menu.button.click.ExecutableComponent
 import net.craftoriya.packetuxui.menu.button.click.ExecutableComponentMarker
 import net.craftoriya.packetuxui.menu.utils.Slot
@@ -72,6 +74,8 @@ open class Menu(
 
         menuService.addMenu(this)
     }
+
+    fun updateItem(user: User, slot: Slot, item: ItemStack) = updateItem(user, slot.toSlot(), item)
 
     fun updateItem(user: User, slot: Int, item: ItemStack) {
         buttons[slot].item = item
@@ -178,8 +182,9 @@ inline fun menu(
 @MenuBuilderDslMarker
 open class MenuBuilderDsl(val type: MenuType) {
     var name: Component = Component.empty()
-    private val buttons = mutableInt2ObjectMapOf<Button>(type.size)
+    private val menuButtons = mutableInt2ObjectMapOf<Button>(type.size)
     private var cooldown = CooldownComponent.EMPTY
+    val buttons = ButtonContext(type, this)
 
     /**
      * Add a button at a specific slot.
@@ -188,7 +193,7 @@ open class MenuBuilderDsl(val type: MenuType) {
      * @param button The button to add.
      */
     fun button(slot: Int, button: Button) {
-        buttons[slot] = button
+        menuButtons[slot] = button
     }
 
     /**
@@ -205,7 +210,7 @@ open class MenuBuilderDsl(val type: MenuType) {
      * @param slot The slot index where the button will be placed.
      * @param builder The builder lambda for the button.
      */
-    fun button(slot: Int, builder: @ButtonBuilderDslMarker ButtonBuilder.() -> Unit) =
+    fun button(slot: Int, builder: @MenuBuilderDslMarker ButtonDslBuilder.() -> Unit) =
         button(slot, Button(builder))
 
     /**
@@ -214,7 +219,7 @@ open class MenuBuilderDsl(val type: MenuType) {
      * @param slot The slot where the button will be placed.
      * @param builder The builder lambda for the button.
      */
-    fun button(slot: Slot, builder: @ButtonBuilderDslMarker ButtonBuilder.() -> Unit) =
+    fun button(slot: Slot, builder: @MenuBuilderDslMarker ButtonDslBuilder.() -> Unit) =
         button(slot.toSlot(), builder)
 
     /**
@@ -223,11 +228,43 @@ open class MenuBuilderDsl(val type: MenuType) {
      * @param range The [SlotRange] where buttons will be placed.
      * @param builder The builder lambda for each slot in the range.
      */
-    fun buttons(range: SlotRange, builder: @ButtonBuilderDslMarker ButtonBuilder.(Slot) -> Unit) {
+    fun buttons(range: SlotRange, builder: @MenuBuilderDslMarker ButtonDslBuilder.(Slot) -> Unit) {
         require(range.compatibleWith(type)) { "Slot range is not compatible with menu type" }
 
         for (slot in range) {
-            buttons[slot.toSlot()] = ButtonBuilder().apply { builder(slot) }.build()
+            menuButtons[slot.toSlot()] = ButtonDslBuilder().apply { builder(slot) }.build()
+        }
+    }
+
+    fun buttons(slots: List<Slot>, builder: @MenuBuilderDslMarker ButtonDslBuilder.(Slot) -> Unit) {
+        for (slot in slots) {
+            menuButtons[slot.toSlot()] = ButtonDslBuilder().apply { builder(slot) }.build()
+        }
+    }
+
+    fun switchButton(slot: Slot, button: SwitchButton) = button(slot, button)
+    fun switchButton(slot: Slot, builder: @MenuBuilderDslMarker SwitchButtonDslBuilder.() -> Unit) =
+        switchButton(slot, SwitchButton(builder))
+    fun switchButton(slot: Int, builder: @MenuBuilderDslMarker SwitchButtonDslBuilder.() -> Unit) =
+        switchButton(Slot(slot), builder)
+    fun switchButton(slot: Int, button: SwitchButton) = switchButton(Slot(slot), button)
+    fun switchButtons(range: SlotRange, builder: @MenuBuilderDslMarker SwitchButtonDslBuilder.(Slot) -> Unit) {
+        require(range.compatibleWith(type)) { "Slot range is not compatible with menu type" }
+
+        for (slot in range) {
+            menuButtons[slot.toSlot()] = SwitchButtonDslBuilder().apply { builder(slot) }.build()
+        }
+    }
+    fun switchButtons(slots: List<Slot>, builder: @MenuBuilderDslMarker SwitchButtonDslBuilder.(Slot) -> Unit) {
+        for (slot in slots) {
+            menuButtons[slot.toSlot()] = SwitchButtonDslBuilder().apply { builder(slot) }.build()
+        }
+    }
+    fun switchButtons(range: SlotRange, buttons: List<SwitchButton>) {
+        require(range.compatibleWith(type)) { "Slot range is not compatible with menu type" }
+
+        for ((index, slot) in range.withIndex()) {
+            menuButtons[slot.toSlot()] = buttons[index]
         }
     }
 
@@ -236,8 +273,16 @@ open class MenuBuilderDsl(val type: MenuType) {
      *
      * @param builder The builder lambda for each slot.
      */
-    fun buildAllButtons(builder: @ButtonBuilderDslMarker ButtonBuilder.(Slot) -> Unit) {
+    fun buildAllButtons(builder: @MenuBuilderDslMarker ButtonDslBuilder.(Slot) -> Unit) {
         buttons(SlotRange(Slot(0), Slot(type.size - 1)), builder)
+    }
+
+    fun fillEmptyButtons(builder: @MenuBuilderDslMarker ButtonDslBuilder.(Slot) -> Unit) {
+        for (slot in 0 until type.size) {
+            if (menuButtons[slot] == null) {
+                menuButtons[slot] = ButtonDslBuilder().apply { builder(Slot(slot)) }.build()
+            }
+        }
     }
 
     /**
@@ -271,6 +316,32 @@ open class MenuBuilderDsl(val type: MenuType) {
      */
     @PublishedApi
     internal open fun build(): Menu {
-        return Menu(name, type, buttons, cooldown)
+        return Menu(name, type, menuButtons, cooldown)
     }
 }
+
+
+@MenuBuilderDslMarker
+class ButtonContext(private val type: MenuType, private val builder: MenuBuilderDsl) {
+    private var range: SlotRange = SlotRange(Slot(0), Slot(type.size - 1))
+
+    infix fun where(predicate: Slot.() -> Boolean): ButtonContext {
+        val filteredSlots = range.filter { it.predicate() }
+        range = SlotRange(filteredSlots.first(), filteredSlots.last())
+        return this
+    }
+
+    infix fun whereX(expectedX: Int): ButtonContext = where { x == expectedX }
+    infix fun whereY(expectedY: Int): ButtonContext = where { y == expectedY }
+
+    infix fun build(builderAction: @ButtonBuilderDslMarker ButtonDslBuilder.(Slot) -> Unit) {
+        require(range.compatibleWith(type)) { "Slot range is not compatible with menu type" }
+
+        for (slot in range) {
+            builder.button(slot) {
+                builderAction(slot)
+            }
+        }
+    }
+}
+

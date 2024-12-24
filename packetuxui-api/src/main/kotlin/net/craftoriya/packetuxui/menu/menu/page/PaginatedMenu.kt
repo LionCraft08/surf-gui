@@ -8,8 +8,8 @@ import net.craftoriya.packetuxui.common.int2ObjectMapOf
 import net.craftoriya.packetuxui.common.mutableObjectListOf
 import net.craftoriya.packetuxui.common.toObjectList
 import net.craftoriya.packetuxui.menu.button.Button
-import net.craftoriya.packetuxui.menu.button.ButtonBuilder
 import net.craftoriya.packetuxui.menu.button.ButtonBuilderDslMarker
+import net.craftoriya.packetuxui.menu.button.ButtonDslBuilder
 import net.craftoriya.packetuxui.menu.item.ItemBuilder
 import net.craftoriya.packetuxui.menu.item.ItemBuilderDslMarker
 import net.craftoriya.packetuxui.menu.menu.Menu
@@ -67,14 +67,14 @@ open class PaginatedMenu(
     fun setPreviousPageButton() {
         buttons[previousPageButtonSlot.toSlot()] = Button {
             item(if (hasPreviousPage()) previousPageItemStack else noPageItemStack)
-            click { previousPage() }
+            onClick { previousPage() }
         }
     }
 
     fun setNextPageButton() {
         buttons[nextPageButtonSlot.toSlot()] = Button {
             item(if (hasNextPage()) nextPageItemStack else noPageItemStack)
-            click { nextPage() }
+            onClick { nextPage() }
         }
     }
 
@@ -144,7 +144,7 @@ open class PaginatedMenuDslBuilder(type: MenuType) : MenuBuilderDsl(type) {
      *
      * @param builder The builder lambda for creating the button.
      */
-    fun pageButton(builder: @ButtonBuilderDslMarker ButtonBuilder.() -> Unit) {
+    fun pageButton(builder: @ButtonBuilderDslMarker ButtonDslBuilder.() -> Unit) {
         pageButtons.add(Button(builder))
     }
 
@@ -156,7 +156,7 @@ open class PaginatedMenuDslBuilder(type: MenuType) : MenuBuilderDsl(type) {
         pageButtons.addAll(buttons)
     }
 
-    fun pageButtons(amount: Int, builder: @ButtonBuilderDslMarker ButtonBuilder.(Int) -> Unit) {
+    fun pageButtons(amount: Int, builder: @ButtonBuilderDslMarker ButtonDslBuilder.(Int) -> Unit) {
         repeat(amount) { pageButton { builder(it) } }
     }
 
@@ -209,23 +209,23 @@ fun main() {
 
     val menu = paginatedMenu(MenuType.GENERIC9X5) {
         buttons(slot(0)..slot(8)) {
-            buildItem { itemType = ItemTypes.BLACK_STAINED_GLASS_PANE }
+            item { type(ItemTypes.BLACK_STAINED_GLASS_PANE) }
         }
 
         buttons(slot(32)..slot(40)) {
-            buildItem { itemType = ItemTypes.BLACK_STAINED_GLASS_PANE }
+            item { type(ItemTypes.BLACK_STAINED_GLASS_PANE) }
         }
 
         pageButtons(protectionButtons) // Add a list of buttons to the menu
 
         pageButton {  // add a single button to the page buttons
-            buildItem {
-                itemType = ItemTypes.DIRT
+            item {
+                type(ItemTypes.DIRT)
             }
         }
 
         pageButtons(5) {  // add 5 buttons to the page buttons
-            buildItem {
+            itemBuilder {
                 itemType = ItemTypes.DIRT
                 amount = max(1, it)
             }

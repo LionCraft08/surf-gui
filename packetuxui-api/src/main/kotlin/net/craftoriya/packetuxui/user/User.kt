@@ -7,7 +7,7 @@ import net.kyori.adventure.text.Component
 import java.util.*
 import com.github.retrooper.packetevents.protocol.player.User as PacketUser
 
-interface User {
+interface User { // TODO: execute command method (removed from Button builder)
 
     val uuid: UUID
     val packetUser: PacketUser?
