@@ -8,7 +8,9 @@ import kotlinx.coroutines.*
 import net.craftoriya.packetuxui.api
 import net.craftoriya.packetuxui.common.*
 import net.craftoriya.packetuxui.dto.CooldownComponent
-import net.craftoriya.packetuxui.menu.button.*
+import net.craftoriya.packetuxui.menu.button.Button
+import net.craftoriya.packetuxui.menu.button.ButtonBuilder
+import net.craftoriya.packetuxui.menu.button.ButtonBuilderDslMarker
 import net.craftoriya.packetuxui.menu.button.click.ExecutableComponent
 import net.craftoriya.packetuxui.menu.button.click.ExecutableComponentMarker
 import net.craftoriya.packetuxui.user.AbstractUser
@@ -22,9 +24,9 @@ fun findMatchingMenu(user: User, containerId: Int) =
 
 open class Menu(
     val name: Component,
-    val type: InventoryType,
+    val type: MenuType,
     buttons: Map<Int, Button>,
-    val cooldown: CooldownComponent = CooldownComponent(),
+    val cooldown: CooldownComponent = CooldownComponent(), // TODO: Check this?
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
     val buttons = mutableInt2ObjectMapOf(buttons).synchronize()
@@ -145,14 +147,14 @@ open class Menu(
 annotation class MenuBuilderDslMarker
 
 inline fun menu(
-    type: InventoryType,
+    type: MenuType,
     builder: @MenuBuilderDslMarker MenuBuilderDsl.() -> Unit
 ): Menu {
     return MenuBuilderDsl(type).apply(builder).build()
 }
 
 @MenuBuilderDslMarker
-class MenuBuilderDsl(val type: InventoryType) {
+class MenuBuilderDsl(val type: MenuType) {
     var name: Component = Component.empty()
     private val buttons = mutableInt2ObjectMapOf<Button>(type.size)
     private var cooldown = CooldownComponent()

@@ -10,9 +10,9 @@ import net.craftoriya.packetuxui.common.*
 import net.craftoriya.packetuxui.dto.AccumulatedDrag
 import net.craftoriya.packetuxui.menu.button.Button
 import net.craftoriya.packetuxui.menu.button.ButtonType
+import net.craftoriya.packetuxui.menu.button.click.ClickData
+import net.craftoriya.packetuxui.menu.button.click.ClickType
 import net.craftoriya.packetuxui.menu.button.click.ExecuteComponent
-import net.craftoriya.packetuxui.types.ClickData
-import net.craftoriya.packetuxui.types.ClickType
 import net.craftoriya.packetuxui.user.User
 import java.util.*
 
@@ -69,29 +69,22 @@ object MenuService {
 
         val now = System.currentTimeMillis()
         val cooldown = button.cooldown.combine(menu.cooldown)
-        val execute = if (!cooldown.isFreezeExpired(now)) {
-            null
-        } else if (!cooldown.isTimeExpired(now)) {
-            button.cooldown.resetFreeze()
-            button.cooldown.execute
-        } else {
-            button.cooldown.resetTime()
-            button.execute
-        }
 
         menu.sendWindowItems(user, carriedItem)
 
-        execute?.let {
-            it(
-                ExecuteComponent(
-                    user,
-                    clickData.buttonType,
-                    slot,
-                    carriedItem,
-                    menu
-                )
-            )
+        val executeComponent = ExecuteComponent(user, clickData.buttonType, slot, carriedItem, menu)
+
+        if (!cooldown.isFreezeExpired(now)) {
+            return
+        } else if (!cooldown.isTimeExpired(now)) {
+            button.cooldown.resetFreeze()
+            button.cooldown.execute?.invoke(executeComponent)
+            return
+        } else {
+            button.cooldown.resetTime()
         }
+
+        button.onClick(executeComponent)
     }
 
     fun updateButton(user: User, newButton: Button, slot: Int) {

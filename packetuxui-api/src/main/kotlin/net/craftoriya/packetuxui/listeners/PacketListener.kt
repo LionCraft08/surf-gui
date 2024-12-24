@@ -8,9 +8,9 @@ import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientCl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.craftoriya.packetuxui.menu.button.click.ClickType
 import net.craftoriya.packetuxui.menu.menu.findMatchingMenu
 import net.craftoriya.packetuxui.menu.menu.menuService
-import net.craftoriya.packetuxui.types.ClickType
 import net.craftoriya.packetuxui.user.UserManager
 
 object PacketListener : PacketListenerAbstract(PacketListenerPriority.HIGHEST) {
