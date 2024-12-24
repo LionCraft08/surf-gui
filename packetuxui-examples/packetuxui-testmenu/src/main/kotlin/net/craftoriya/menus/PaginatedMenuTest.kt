@@ -7,7 +7,7 @@ import net.craftoriya.packetuxui.menu.button.Button
 import net.craftoriya.packetuxui.menu.item.ItemBuilder
 import net.craftoriya.packetuxui.menu.menu.MenuType
 import net.craftoriya.packetuxui.menu.page.PaginatedMenu
-import net.craftoriya.packetuxui.menu.utils.position
+import net.craftoriya.packetuxui.menu.utils.slot
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 
@@ -33,19 +33,19 @@ class PaginatedMenuTest :
         Component.text("Test"),
         MenuType.GENERIC9X5,
         generateButtons(100),
-        position(0, 1)..position(8, 3),
-        position(0, 4),
-        position(8, 4),
+        slot(0, 1)..slot(8, 3),
+        slot(0, 4),
+        slot(8, 4),
     ) {
     init {
         for (slot in 0 until type.size) {
             when (slot) {
-                in position(0, 0).toSlot()..position(8, 0).toSlot() ->
+                in slot(0, 0).toSlot()..slot(8, 0).toSlot() ->
                     buttons[slot] = Button(
                         item = ItemStack.builder().type(ItemTypes.BLACK_STAINED_GLASS_PANE).build()
                     )
 
-                in position(1, 4).toSlot()..position(7, 4).toSlot() ->
+                in slot(1, 4).toSlot()..slot(7, 4).toSlot() ->
                     buttons[slot] = Button(
                         item = ItemStack.builder().type(ItemTypes.BLACK_STAINED_GLASS_PANE).build()
                     )

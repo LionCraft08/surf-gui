@@ -8,7 +8,7 @@ import net.craftoriya.packetuxui.menu.button.ButtonBuilder
 import net.craftoriya.packetuxui.menu.menu.Menu
 import net.craftoriya.packetuxui.menu.menu.MenuType
 import net.craftoriya.packetuxui.menu.menu.menu
-import net.craftoriya.packetuxui.menu.utils.Position
+import net.craftoriya.packetuxui.menu.utils.Slot
 import net.craftoriya.packetuxui.menu.utils.PositionRange
 import net.kyori.adventure.text.Component
 
@@ -25,8 +25,8 @@ open class PaginatedMenu(
     type: MenuType,
     pageButtons: List<Button>,
     private val buttonRange: PositionRange,
-    private val previousPageButtonSlot: Position,
-    private val nextPageButtonSlot: Position,
+    private val previousPageButtonSlot: Slot,
+    private val nextPageButtonSlot: Slot,
 
     private val noPageItemStack: ItemStack = ItemStack.EMPTY,
     private val nextPageItemStack: ItemStack = ItemStack.builder().type(ItemTypes.ARROW)

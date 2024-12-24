@@ -3,17 +3,17 @@ package net.craftoriya.packetuxui.menu.utils
 import net.craftoriya.packetuxui.menu.menu.MenuType
 
 class PositionRange(
-    override val start: Position,
-    override val endInclusive: Position
-) : ClosedRange<Position>, Iterable<Position> {
+    override val start: Slot,
+    override val endInclusive: Slot
+) : ClosedRange<Slot>, Iterable<Slot> {
 
-    override fun iterator(): Iterator<Position> {
-        return object : Iterator<Position> {
+    override fun iterator(): Iterator<Slot> {
+        return object : Iterator<Slot> {
             private var current = start
 
             override fun hasNext(): Boolean = current <= endInclusive
 
-            override fun next(): Position {
+            override fun next(): Slot {
                 if (!hasNext()) throw NoSuchElementException()
 
                 val result = current
@@ -25,7 +25,7 @@ class PositionRange(
     }
 }
 
-class Position() : Cloneable, Comparable<Position> {
+class Slot() : Cloneable, Comparable<Slot> {
 
     var x: Int = 0
         set(value) {
@@ -78,7 +78,7 @@ class Position() : Cloneable, Comparable<Position> {
 
     fun toSlot() = y * gridWidth + x
 
-    fun normalize(block: () -> Unit): Position {
+    fun normalize(block: () -> Unit): Slot {
         block()
 
         if (x >= gridWidth || x < 0) {
@@ -110,12 +110,12 @@ class Position() : Cloneable, Comparable<Position> {
     fun left() = left(1)
     fun right() = right(1)
 
-    fun next() = Position().apply {
-        this@apply.fromSlot(this@Position.toSlot() + 1)
+    fun next() = Slot().apply {
+        this@apply.fromSlot(this@Slot.toSlot() + 1)
     }
 
-    fun previous() = Position().apply {
-        this@apply.fromSlot(this@Position.toSlot() - 1)
+    fun previous() = Slot().apply {
+        this@apply.fromSlot(this@Slot.toSlot() - 1)
     }
 
     fun isValid() = x >= 0 && y >= 0
@@ -127,7 +127,7 @@ class Position() : Cloneable, Comparable<Position> {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Position
+        other as Slot
 
         if (x != other.x) return false
         if (y != other.y) return false
@@ -141,18 +141,18 @@ class Position() : Cloneable, Comparable<Position> {
         return result
     }
 
-    public override fun clone() = Position(x, y, gridWidth)
+    public override fun clone() = Slot(x, y, gridWidth)
 
     override fun toString(): String {
         return "Position(x=$x, y=$y, absolute=${toSlot()})"
     }
 
-    operator fun plus(other: Position) = Position(x + other.x, y + other.y)
-    operator fun minus(other: Position) = Position(x - other.x, y - other.y)
+    operator fun plus(other: Slot) = Slot(x + other.x, y + other.y)
+    operator fun minus(other: Slot) = Slot(x - other.x, y - other.y)
 
-    override fun compareTo(other: Position) = toSlot().compareTo(other.toSlot())
+    override fun compareTo(other: Slot) = toSlot().compareTo(other.toSlot())
 
-    operator fun rangeTo(other: Position): PositionRange {
+    operator fun rangeTo(other: Slot): PositionRange {
         require(this <= other) { "Range start must be less than or equal to range end." }
 
         return PositionRange(this, other)
@@ -161,10 +161,13 @@ class Position() : Cloneable, Comparable<Position> {
     operator fun rangeTo(other: Int): PositionRange {
         require(this.toSlot() <= other) { "Range start must be less than or equal to range end." }
 
-        return PositionRange(this, Position(other))
+        return PositionRange(this, Slot(other))
     }
 }
 
-fun position(x: Int, y: Int, gridWidth: Int = 9) = Position(x, y, gridWidth)
-
+fun slot(x: Int, y: Int, gridWidth: Int = 9) = Slot(x, y, gridWidth)
+infix fun Int.at(y: Int) = Slot(this, y)
+infix fun Slot.width(width: Int) {
+    this.gridWidth = width
+}
 
