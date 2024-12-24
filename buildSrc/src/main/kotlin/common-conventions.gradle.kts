@@ -12,7 +12,7 @@ repositories {
 }
 
 group = "net.craftoriya"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.1-SNAPSHOT"
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
