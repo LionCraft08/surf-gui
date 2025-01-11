@@ -8,7 +8,7 @@ plugins {
 }
 
 tasks.runServer {
-    minecraftVersion("1.21.1")
+    minecraftVersion("1.21.4")
 
     downloadPlugins {
         modrinth("packetevents", "2.7.0")
@@ -30,17 +30,14 @@ paper {
         register("packetevents") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             required = true
-            joinClasspath = true
         }
         register("CommandAPI") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             required = true
-            joinClasspath = true
         }
         register("MCKotlin-Paper") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             required = true
-            joinClasspath = true
         }
     }
 }
