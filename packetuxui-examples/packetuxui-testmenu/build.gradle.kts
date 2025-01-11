@@ -20,7 +20,7 @@ tasks.runServer {
 }
 
 paper {
-    main = "net.craftoriya.TestMenu"
+    main = "dev.slne.TestMenu"
 
     serverDependencies {
         register("packetuxui-bukkit") {

@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import java.util.Properties
 
 plugins {
     `maven-publish`
@@ -8,20 +7,11 @@ plugins {
     id("org.hibernate.build.maven-repo-auth")
 }
 
-val customProperties = Properties().apply {
-    rootProject.file("repo.properties").takeIf { it.exists() }?.reader()?.use { load(it) }
-}
-
-val mavenRepoUrl: String = customProperties["mavenSnapshotRepoUrl"]?.toString()
-    ?: error("Missing mavenSnapshotRepoUrl")
-val mavenRepoName: String = customProperties["mavenSnapshotRepoName"]?.toString()
-    ?: error("Missing mavenSnapshotRepoName")
-
 tasks.withType<ShadowJar> {
     mergeServiceFiles()
 
     exclude("kotlin/**")
-    val group = "net.craftoriya"
+    val group = "dev.slne"
     val relocations = mapOf(
         "com.github.shynixn.mccoroutine" to "$group.libs.mccoroutine",
         "org.intellij" to "$group.libs.intellij",
@@ -41,8 +31,6 @@ publishing {
     }
 
     repositories {
-        maven(mavenRepoUrl) {
-            name = mavenRepoName
-        }
+        maven("https://repo.slne.dev/repository/maven-unsafe") { name = "maven-unsafe" }
     }
 }

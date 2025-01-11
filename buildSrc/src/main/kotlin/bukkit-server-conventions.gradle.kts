@@ -13,6 +13,7 @@ tasks.runServer {
     downloadPlugins {
         modrinth("packetevents", "2.7.0")
         modrinth("commandapi", "9.7.0")
+        modrinth("mckotlin", "Z25PwYNh")
     }
 }
 
@@ -22,7 +23,7 @@ paper {
 
     foliaSupported = true
     apiVersion = "1.21"
-    authors = listOf("OceJlot", "Ammo", "Twisti_twixi")
+    authors = listOf("Ammo", "Twisti_twixi")
     generateLibrariesJson = true
 
     serverDependencies {
@@ -32,6 +33,11 @@ paper {
             joinClasspath = true
         }
         register("CommandAPI") {
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            required = true
+            joinClasspath = true
+        }
+        register("MCKotlin-Paper") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             required = true
             joinClasspath = true

@@ -11,8 +11,8 @@ repositories {
     maven("https://repo.codemc.io/repository/maven-releases/")
 }
 
-group = "net.craftoriya"
-version = "1.0.1-SNAPSHOT"
+group = "dev.slne"
+version = "1.0.0-SNAPSHOT"
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"

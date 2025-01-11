@@ -6,8 +6,8 @@ plugins {
 }
 
 paper {
-    main = "net.craftoriya.packetuxui.PacketUxUiPlugin"
-    loader = "net.craftoriya.packetuxui.bukkit.PacketUxUiBukkitLoader"
+    main = "dev.slne.packetuxui.PacketUxUiPlugin"
+    loader = "dev.slne.packetuxui.bukkit.PacketUxUiBukkitLoader"
 }
 
 dependencies {
