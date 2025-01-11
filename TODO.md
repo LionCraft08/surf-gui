@@ -1,0 +1,4 @@
+- [X] Fix container id generation
+- [X] Move viewers to the menu
+- [X] Actually identificate menu via its id in the listener and not the user clicking it?
+- [ ] Add license
