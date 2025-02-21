@@ -6,10 +6,10 @@ on:
       - master
 
 env:
-  MAVEN_SNAPSHOTS_USERNAME: ${{ secrets.MAVEN_SNAPSHOTS_PASSWORD }}
-  MAVEN_SNAPSHOTS_PASSWORD: ${{ secrets.MAVEN_SNAPSHOTS_PASSWORD }}
-  MAVEN_RELEASES_USERNAME: ${{ secrets.MAVEN_RELEASES_USERNAME }}
-  MAVEN_RELEASES_PASSWORD: ${{ secrets.MAVEN_RELEASES_PASSWORD }}
+  SLNE_SNAPSHOTS_REPO_USERNAME: ${{ secrets.MAVEN_SNAPSHOTS_USERNAME }}
+  SLNE_SNAPSHOTS_REPO_PASSWORD: ${{ secrets.MAVEN_SNAPSHOTS_PASSWORD }}
+  SLNE_RELEASES_REPO_USERNAME: ${{ secrets.MAVEN_RELEASES_USERNAME }}
+  SLNE_RELEASES_REPO_PASSWORD: ${{ secrets.MAVEN_RELEASES_PASSWORD }}
 
 jobs:
   publish:
@@ -20,6 +20,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Prepare Gradle Cache
+        uses: burrunan/gradle-cache-action@v1
       - name: Setup JDK
         uses: actions/setup-java@v4
         with:
