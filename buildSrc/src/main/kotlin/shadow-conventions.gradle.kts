@@ -4,7 +4,6 @@ plugins {
     `maven-publish`
 
     id("com.gradleup.shadow")
-    id("org.hibernate.build.maven-repo-auth")
 }
 
 tasks.withType<ShadowJar> {
