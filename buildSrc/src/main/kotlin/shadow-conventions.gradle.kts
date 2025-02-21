@@ -31,6 +31,22 @@ publishing {
     }
 
     repositories {
-        maven("https://repo.slne.dev/repository/maven-unsafe") { name = "maven-unsafe" }
+        if (version.toString().endsWith("-SNAPSHOT")) {
+            maven("https://repo.slne.dev/repository/maven-snapshots") {
+                name = "maven-snapshots"
+                credentials {
+                    username = System.getenv("SLNE_SNAPSHOTS_REPO_USERNAME")
+                    password = System.getenv("SLNE_SNAPSHOTS_REPO_PASSWORD")
+                }
+            }
+        } else {
+            maven("https://repo.slne.dev/repository/maven-releases") {
+                name = "maven-releases"
+                credentials {
+                    username = System.getenv("SLNE_RELEASES_REPO_USERNAME")
+                    password = System.getenv("SLNE_RELEASES_REPO_PASSWORD")
+                }
+            }
+        }
     }
 }
