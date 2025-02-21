@@ -9,10 +9,11 @@ repositories {
 
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.codemc.io/repository/maven-releases/")
+    maven("https://repo.codemc.io/repository/maven-snapshots/")
 }
 
-group = "dev.slne"
-version = "1.0.1-SNAPSHOT"
+group = "dev.slne.surf"
+version = "2.0.0-SNAPSHOT"
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"

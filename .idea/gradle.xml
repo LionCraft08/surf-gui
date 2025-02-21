@@ -22,13 +22,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/buildSrc" />
-            <option value="$PROJECT_DIR$/packetuxui-api" />
-            <option value="$PROJECT_DIR$/packetuxui-bukkit" />
-            <option value="$PROJECT_DIR$/packetuxui-examples" />
-            <option value="$PROJECT_DIR$/packetuxui-examples/packetuxui-testmenu" />
-            <option value="$PROJECT_DIR$/packetuxui-nms" />
-            <option value="$PROJECT_DIR$/packetuxui-nms/packetuxui-nms-1_21_1" />
-            <option value="$PROJECT_DIR$/packetuxui-nms/packetuxui-nms-common" />
+            <option value="$PROJECT_DIR$/surf-gui-api" />
+            <option value="$PROJECT_DIR$/surf-gui-bukkit" />
+            <option value="$PROJECT_DIR$/surf-gui-examples" />
+            <option value="$PROJECT_DIR$/surf-gui-examples/surf-gui-testmenu" />
+            <option value="$PROJECT_DIR$/surf-gui-nms" />
+            <option value="$PROJECT_DIR$/surf-gui-nms/surf-gui-nms-1_21_1" />
+            <option value="$PROJECT_DIR$/surf-gui-nms/surf-gui-nms-1_21_4" />
+            <option value="$PROJECT_DIR$/surf-gui-nms/surf-gui-nms-common" />
           </set>
         </option>
       </GradleProjectSettings>
