@@ -95,7 +95,7 @@ class ButtonBuilder {
      * @return The builder.
      */
     fun buildItem(builder: ItemBuilder.() -> Unit) =
-        item(ItemBuilder().apply(builder).build()) // TODO: meaningfully name
+        item(ItemBuilder().apply(builder).build())
 
 }
 
