@@ -1,4 +1,5 @@
 import net.minecrell.pluginyml.paper.PaperPluginDescription
+import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
     `java-library`
@@ -7,13 +8,17 @@ plugins {
     id("xyz.jpenilla.run-paper")
 }
 
+val libs = the<LibrariesForLibs>()
+dependencies {
+    paperLibrary(libs.kotlin.jvm)
+}
+
 tasks.runServer {
     minecraftVersion("1.21.4")
 
     downloadPlugins {
         modrinth("packetevents", "2.7.0")
         modrinth("commandapi", "9.7.0")
-        modrinth("mckotlin", "Z25PwYNh")
     }
 }
 
@@ -32,10 +37,6 @@ paper {
             required = true
         }
         register("CommandAPI") {
-            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
-            required = true
-        }
-        register("MCKotlin-Paper") {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             required = true
         }
