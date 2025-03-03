@@ -7,12 +7,11 @@ plugins {
 repositories {
     mavenCentral()
 
-    maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.codemc.io/repository/maven-releases/")
+    maven("https://repo.slne.dev/repository/maven-public") { name = "maven-public" }
 }
 
-group = "net.craftoriya"
-version = "1.0.1-SNAPSHOT"
+group = "dev.slne.surf"
+version = findProperty("version") as String
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"

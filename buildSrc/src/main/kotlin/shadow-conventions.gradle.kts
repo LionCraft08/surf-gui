@@ -1,27 +1,16 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import java.util.Properties
 
 plugins {
     `maven-publish`
 
     id("com.gradleup.shadow")
-    id("org.hibernate.build.maven-repo-auth")
 }
-
-val customProperties = Properties().apply {
-    rootProject.file("repo.properties").takeIf { it.exists() }?.reader()?.use { load(it) }
-}
-
-val mavenRepoUrl: String = customProperties["mavenSnapshotRepoUrl"]?.toString()
-    ?: error("Missing mavenSnapshotRepoUrl")
-val mavenRepoName: String = customProperties["mavenSnapshotRepoName"]?.toString()
-    ?: error("Missing mavenSnapshotRepoName")
 
 tasks.withType<ShadowJar> {
     mergeServiceFiles()
 
     exclude("kotlin/**")
-    val group = "net.craftoriya"
+    val group = "dev.slne"
     val relocations = mapOf(
         "com.github.shynixn.mccoroutine" to "$group.libs.mccoroutine",
         "org.intellij" to "$group.libs.intellij",
@@ -41,8 +30,22 @@ publishing {
     }
 
     repositories {
-        maven(mavenRepoUrl) {
-            name = mavenRepoName
+        if (version.toString().endsWith("-SNAPSHOT")) {
+            maven("https://repo.slne.dev/repository/maven-snapshots") {
+                name = "maven-snapshots"
+                credentials {
+                    username = System.getenv("SLNE_SNAPSHOTS_REPO_USERNAME")
+                    password = System.getenv("SLNE_SNAPSHOTS_REPO_PASSWORD")
+                }
+            }
+        } else {
+            maven("https://repo.slne.dev/repository/maven-releases") {
+                name = "maven-releases"
+                credentials {
+                    username = System.getenv("SLNE_RELEASES_REPO_USERNAME")
+                    password = System.getenv("SLNE_RELEASES_REPO_PASSWORD")
+                }
+            }
         }
     }
 }
