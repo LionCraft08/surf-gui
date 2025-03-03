@@ -1,9 +1,9 @@
-package net.craftoriya.packetuxui.menu.utils
+package dev.slne.surf.gui.util
 
+import dev.slne.surf.gui.common.objectSetOf
+import dev.slne.surf.gui.menu.menu.MenuBuilderDsl
+import dev.slne.surf.gui.menu.menu.MenuType
 import it.unimi.dsi.fastutil.objects.ObjectSet
-import net.craftoriya.packetuxui.common.objectSetOf
-import net.craftoriya.packetuxui.menu.menu.MenuBuilderDsl
-import net.craftoriya.packetuxui.menu.menu.MenuType
 
 /**
  * Represents a range of [Slot]s, providing functionality to iterate over all slots in the range.
@@ -45,7 +45,7 @@ class SlotRange(
     /**
      * Converts this range into a set of all [Slot]s contained in it.
      *
-     * @return A [ObjectSet] of [Slot]s from `start` to `endInclusive`.
+     * @return A [it.unimi.dsi.fastutil.objects.ObjectSet] of [Slot]s from `start` to `endInclusive`.
      */
     fun toList(): ObjectSet<Slot> = objectSetOf(iterator())
 
@@ -66,7 +66,7 @@ class SlotRange(
  * @property y The vertical position (row) in the grid. Must be greater than or equal to 0.
  * @property gridWidth The width of the grid. Must be greater than 0.
  * @constructor Creates a new [Slot] with the given `x`, `y`, and `gridWidth`.
- * @throws IllegalArgumentException if `x` or `y` are out of range or `gridWidth` is invalid.
+ * @throws kotlin.IllegalArgumentException if `x` or `y` are out of range or `gridWidth` is invalid.
  */
 data class Slot(
     val x: Int,
@@ -85,7 +85,7 @@ data class Slot(
      *
      * @param absolute The absolute position in the grid.
      * @param gridWidth The width of the grid. Defaults to 9.
-     * @throws IllegalArgumentException if `gridWidth` is invalid.
+     * @throws kotlin.IllegalArgumentException if `gridWidth` is invalid.
      */
     constructor(absolute: Int, gridWidth: Int = 9) : this(
         x = absolute % gridWidth,
@@ -209,7 +209,7 @@ data class Slot(
      *
      * @param other The end [Slot] of the range.
      * @return A [SlotRange] representing the range from this [Slot] to [other].
-     * @throws IllegalArgumentException if this [Slot] is greater than [other].
+     * @throws kotlin.IllegalArgumentException if this [Slot] is greater than [other].
      */
     operator fun rangeTo(other: Slot): SlotRange {
         require(this <= other) { "Range start must be less than or equal to range end." }
@@ -221,7 +221,7 @@ data class Slot(
      *
      * @param other The end position of the range.
      * @return A [SlotRange] representing the range from this [Slot] to [other].
-     * @throws IllegalArgumentException if this [Slot] is greater than [other].
+     * @throws kotlin.IllegalArgumentException if this [Slot] is greater than [other].
      */
     operator fun rangeTo(other: Int): SlotRange {
         require(this.toSlot() <= other) { "Range start must be less than or equal to range end." }

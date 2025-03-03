@@ -6,8 +6,8 @@ import dev.slne.surf.gui.bukkit.extensions.toPlayer
 import dev.slne.surf.gui.menu.button.Button
 import dev.slne.surf.gui.menu.item.ItemBuilder
 import dev.slne.surf.gui.menu.menu.MenuType
-import dev.slne.surf.gui.menu.menu.page.PaginatedMenu
-import dev.slne.surf.gui.menu.utils.slot
+import dev.slne.surf.gui.menu.page.PaginatedMenu
+import dev.slne.surf.gui.util.slot
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 

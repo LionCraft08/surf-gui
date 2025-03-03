@@ -8,10 +8,17 @@ import dev.slne.surf.gui.api
 import dev.slne.surf.gui.common.*
 import dev.slne.surf.gui.dto.CooldownComponent
 import dev.slne.surf.gui.menu.button.Button
+import dev.slne.surf.gui.menu.button.ButtonBuilderDslMarker
+import dev.slne.surf.gui.menu.button.ButtonDslBuilder
+import dev.slne.surf.gui.menu.button.buttons.SwitchButton
+import dev.slne.surf.gui.menu.button.buttons.SwitchButtonDslBuilder
 import dev.slne.surf.gui.menu.button.click.ExecutableComponent
 import dev.slne.surf.gui.menu.button.click.ExecutableComponentMarker
 import dev.slne.surf.gui.user.AbstractUser
 import dev.slne.surf.gui.user.User
+import dev.slne.surf.gui.util.Slot
+import dev.slne.surf.gui.util.SlotRange
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import kotlinx.coroutines.*
 import net.kyori.adventure.text.Component
 

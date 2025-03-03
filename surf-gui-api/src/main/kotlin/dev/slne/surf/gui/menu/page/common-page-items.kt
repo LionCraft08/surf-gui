@@ -1,7 +1,7 @@
-package net.craftoriya.packetuxui.menu.menu.page
+package dev.slne.surf.gui.menu.page
 
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
-import net.craftoriya.packetuxui.menu.item.ItemBuilder
+import dev.slne.surf.gui.menu.item.ItemBuilder
 import net.kyori.adventure.text.Component
 
 internal fun createNextPageStack() = ItemBuilder().apply {

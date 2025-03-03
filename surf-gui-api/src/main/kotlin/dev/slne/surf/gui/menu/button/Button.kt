@@ -6,6 +6,7 @@ import dev.slne.surf.gui.common.toPlain
 import dev.slne.surf.gui.dto.CooldownComponent
 import dev.slne.surf.gui.menu.button.click.ExecutableComponent
 import dev.slne.surf.gui.menu.button.click.ExecuteComponent
+import dev.slne.surf.gui.menu.item.ItemBuilder
 import net.kyori.adventure.text.Component
 
 /**
@@ -19,7 +20,6 @@ open class Button(
     var item: ItemStack,
     var execute: ExecutableComponent? = null,
     var cooldown: CooldownComponent = CooldownComponent(0)
-
 ) {
     /**
      * Executes the button's function

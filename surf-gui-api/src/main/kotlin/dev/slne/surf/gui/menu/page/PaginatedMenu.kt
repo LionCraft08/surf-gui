@@ -1,27 +1,32 @@
-package net.craftoriya.packetuxui.menu.menu.page
+package dev.slne.surf.gui.menu.page
 
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes
 import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
+import dev.slne.surf.gui.common.int2ObjectMapOf
+import dev.slne.surf.gui.common.mutableObjectListOf
+import dev.slne.surf.gui.common.toObjectList
+import dev.slne.surf.gui.menu.button.Button
+import dev.slne.surf.gui.menu.button.ButtonBuilderDslMarker
+import dev.slne.surf.gui.menu.button.ButtonDslBuilder
+import dev.slne.surf.gui.menu.item.ItemBuilder
+import dev.slne.surf.gui.menu.item.ItemBuilderDslMarker
+import dev.slne.surf.gui.menu.menu.Menu
+import dev.slne.surf.gui.menu.menu.MenuBuilderDsl
+import dev.slne.surf.gui.menu.menu.MenuBuilderDslMarker
+import dev.slne.surf.gui.menu.menu.MenuType
+import dev.slne.surf.gui.util.Slot
+import dev.slne.surf.gui.util.SlotRange
+import dev.slne.surf.gui.util.slot
 import it.unimi.dsi.fastutil.objects.ObjectList
-import net.craftoriya.packetuxui.common.int2ObjectMapOf
-import net.craftoriya.packetuxui.common.mutableObjectListOf
-import net.craftoriya.packetuxui.common.toObjectList
-import net.craftoriya.packetuxui.menu.button.Button
-import net.craftoriya.packetuxui.menu.button.ButtonBuilderDslMarker
-import net.craftoriya.packetuxui.menu.button.ButtonDslBuilder
-import net.craftoriya.packetuxui.menu.item.ItemBuilder
-import net.craftoriya.packetuxui.menu.item.ItemBuilderDslMarker
-import net.craftoriya.packetuxui.menu.menu.Menu
-import net.craftoriya.packetuxui.menu.menu.MenuBuilderDsl
-import net.craftoriya.packetuxui.menu.menu.MenuBuilderDslMarker
-import net.craftoriya.packetuxui.menu.menu.MenuType
-import net.craftoriya.packetuxui.menu.utils.Slot
-import net.craftoriya.packetuxui.menu.utils.SlotRange
-import net.craftoriya.packetuxui.menu.utils.slot
 import net.kyori.adventure.text.Component
 import kotlin.math.max
 
+/**
+ * Represents a page in a paginated menu.
+ *
+ * @property buttons The buttons on this page.
+ */
 data class Page(
     val buttons: List<Button>
 ) {

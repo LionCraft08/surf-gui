@@ -1,9 +1,9 @@
 package dev.slne.surf.gui.menu.button.buttons
 
-import net.craftoriya.packetuxui.common.mutableObjectListOf
+import dev.slne.surf.gui.common.mutableObjectListOf
 import dev.slne.surf.gui.menu.button.Button
-import net.craftoriya.packetuxui.menu.button.ButtonBuilderDslMarker
-import net.craftoriya.packetuxui.menu.button.ButtonDslBuilder
+import dev.slne.surf.gui.menu.button.ButtonBuilderDslMarker
+import dev.slne.surf.gui.menu.button.ButtonDslBuilder
 import dev.slne.surf.gui.menu.button.click.ExecuteComponent
 
 typealias SwitchButtonStateChangeHandler = (fromState: Button, toState: Button) -> Unit

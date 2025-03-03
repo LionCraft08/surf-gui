@@ -5,10 +5,12 @@ import com.github.retrooper.packetevents.protocol.item.enchantment.type.Enchantm
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
 import dev.slne.surf.gui.bukkit.extensions.toUser
 import dev.slne.surf.gui.common.toComponent
+import dev.slne.surf.gui.menu.button.Button
 import dev.slne.surf.gui.menu.button.ButtonBuilder
 import dev.slne.surf.gui.menu.button.buttons.SwitchButton
 import dev.slne.surf.gui.menu.menu.MenuType
 import dev.slne.surf.gui.menu.menu.menu
+import dev.slne.surf.gui.util.at
 import kotlinx.coroutines.delay
 import org.bukkit.Bukkit
 import kotlin.random.Random
