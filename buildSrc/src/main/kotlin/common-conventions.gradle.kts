@@ -11,7 +11,7 @@ repositories {
 }
 
 group = "dev.slne.surf"
-version = "2.0.0-SNAPSHOT"
+version = findProperty("version") as String
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
