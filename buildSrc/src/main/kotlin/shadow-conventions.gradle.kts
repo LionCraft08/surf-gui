@@ -10,7 +10,7 @@ tasks.withType<ShadowJar> {
     mergeServiceFiles()
 
     exclude("kotlin/**")
-    val group = "dev.slne"
+    val group = "dev.slne.surf.gui"
     val relocations = mapOf(
         "com.github.shynixn.mccoroutine" to "$group.libs.mccoroutine",
         "org.intellij" to "$group.libs.intellij",
