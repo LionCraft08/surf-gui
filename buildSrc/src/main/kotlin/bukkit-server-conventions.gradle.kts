@@ -10,7 +10,7 @@ plugins {
 
 val libs = the<LibrariesForLibs>()
 dependencies {
-    paperLibrary(libs.kotlin.jvm)
+    paperLibrary(libs.kotlin.stdlib)
 }
 
 tasks.runServer {
