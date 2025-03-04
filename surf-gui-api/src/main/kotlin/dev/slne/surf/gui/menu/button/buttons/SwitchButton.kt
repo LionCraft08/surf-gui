@@ -29,6 +29,11 @@ class SwitchButton(
         check(states.contains(defaultState)) { "Default state must be one of the states" }
     }
 
+    companion object Builder {
+        operator fun invoke(builder: @ButtonBuilderDslMarker SwitchButtonDslBuilder.() -> Unit) =
+            SwitchButtonDslBuilder().apply(builder).build()
+    }
+
     var currentState = defaultState
         private set
 
@@ -104,8 +109,4 @@ class SwitchButtonDslBuilder : ButtonDslBuilder() {
 
         return SwitchButton(states, defaultState, onStateChange)
     }
-}
-
-fun SwitchButton(builder: @ButtonBuilderDslMarker SwitchButtonDslBuilder.() -> Unit): SwitchButton {
-    return SwitchButtonDslBuilder().apply(builder).build()
 }
