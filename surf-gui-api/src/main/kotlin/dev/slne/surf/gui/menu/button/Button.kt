@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.protocol.component.ComponentTypes
 import com.github.retrooper.packetevents.protocol.item.ItemStack
 import dev.slne.surf.gui.common.toPlain
 import dev.slne.surf.gui.dto.CooldownComponent
+import dev.slne.surf.gui.menu.button.buttons.SwitchButton
 import dev.slne.surf.gui.menu.button.click.ExecutableComponent
 import dev.slne.surf.gui.menu.button.click.ExecuteComponent
 import dev.slne.surf.gui.menu.item.ItemBuilder
@@ -66,7 +67,6 @@ open class ButtonDslBuilder() {
     fun onClick(click: @ButtonBuilderDslMarker ExecutableComponent) {
         this.click = click
     }
-
 
     fun cooldown(cooldown: CooldownComponent) {
         this.cooldown = cooldown
