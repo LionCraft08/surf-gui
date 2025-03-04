@@ -9,13 +9,15 @@ import dev.slne.surf.gui.menu.button.click.ClickType
 import dev.slne.surf.gui.menu.menu.findMatchingMenu
 import dev.slne.surf.gui.menu.menu.menuService
 import dev.slne.surf.gui.user.UserManager
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal object PacketListener : PacketListenerAbstract(PacketListenerPriority.HIGHEST) {
 
-    private val packetScope = CoroutineScope(Dispatchers.Default)
+    private val packetScope =
+        CoroutineScope(Dispatchers.Default + CoroutineName("surf-gui-packet-listener"))
 
     override fun onPacketReceive(event: PacketReceiveEvent) {
         val packetType = event.packetType
