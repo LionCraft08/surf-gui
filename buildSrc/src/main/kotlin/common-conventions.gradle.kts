@@ -24,9 +24,3 @@ kotlin {
 tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
-}

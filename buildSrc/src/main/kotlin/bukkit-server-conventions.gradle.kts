@@ -24,7 +24,7 @@ tasks.runServer {
 
 paper {
     name = project.name
-    version = rootProject.findProperty("version") as String? ?: "undefined"
+    version = rootProject.findProperty("version") as String
 
     foliaSupported = true
     apiVersion = "1.21"

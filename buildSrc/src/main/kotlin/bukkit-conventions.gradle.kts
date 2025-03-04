@@ -1,13 +1,16 @@
+import org.gradle.accessors.dm.LibrariesForLibs
+
 plugins {
     `java-library`
 }
 
-val libs: VersionCatalog = the<VersionCatalogsExtension>().named("libs")
-dependencies {
-    compileOnly(libs.findLibrary("paper").orElseThrow())
-    compileOnly(libs.findLibrary("commandapi-bukkit").orElseThrow())
-    compileOnly(libs.findLibrary("commandapi-bukkit-kotlin").orElseThrow())
+val libs = the<LibrariesForLibs>()
 
-    implementation(libs.findLibrary("mccoroutine-folia").orElseThrow())
-    implementation(libs.findLibrary("mccoroutine-folia-core").orElseThrow())
+dependencies {
+    compileOnly(libs.paper)
+    compileOnly(libs.commandapi.bukkit)
+    compileOnly(libs.commandapi.bukkit.kotlin)
+
+    implementation(libs.mccoroutine.folia)
+    implementation(libs.mccoroutine.folia.core)
 }
