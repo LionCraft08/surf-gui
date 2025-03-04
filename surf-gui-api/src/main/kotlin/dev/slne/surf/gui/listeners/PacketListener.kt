@@ -13,7 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-object PacketListener : PacketListenerAbstract(PacketListenerPriority.HIGHEST) {
+internal object PacketListener : PacketListenerAbstract(PacketListenerPriority.HIGHEST) {
 
     private val packetScope = CoroutineScope(Dispatchers.Default)
 
