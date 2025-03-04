@@ -17,6 +17,7 @@ fun <T> objectSetOf(collection: Collection<T>) =
     mutableObjectSetOf<T>().apply { addAll(collection) }.freeze()
 
 fun <T> objectSetOf() = emptyObjectSet<T>()
+fun <T> objectSetOf(iterator: Iterator<T>) = ObjectOpenHashSet<T>(iterator).freeze()
 fun <T> emptyObjectSet(): @Unmodifiable ObjectSet<T> = ObjectSets.emptySet()
 fun <T> ObjectSet<T>.synchronize(): ObjectSet<T> = ObjectSets.synchronize(this)
 fun <T> ObjectSet<T>.freeze(): @UnmodifiableView ObjectSet<T> = ObjectSets.unmodifiable(this)

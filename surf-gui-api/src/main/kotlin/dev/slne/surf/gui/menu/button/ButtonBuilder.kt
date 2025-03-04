@@ -9,6 +9,7 @@ import dev.slne.surf.gui.menu.item.ItemBuilder
 /**
  * A builder for [Button]s.
  */
+@Deprecated("Use the DSL instead", ReplaceWith("Button { }", "dev.slne.surf.gui.menu.button.Button"))
 class ButtonBuilder {
 
     private var item: ItemStack = ItemStack.EMPTY
@@ -96,17 +97,4 @@ class ButtonBuilder {
      */
     fun buildItem(builder: ItemBuilder.() -> Unit) =
         item(ItemBuilder().apply(builder).build())
-
 }
-
-@Target(AnnotationTarget.TYPE)
-@DslMarker
-annotation class ButtonBuilderDslMarker
-
-/**
- * Create a button using the given builder.
- *
- * @param builder The builder for the button.
- */
-fun button(builder: @ButtonBuilderDslMarker ButtonBuilder.() -> Unit): Button =
-    ButtonBuilder().apply(builder).build()
