@@ -19,6 +19,11 @@ import java.util.*
 class HeadItemBuilder : ItemBuilder() {
     var base64: String = ""
 
+    companion object Builder {
+        operator fun invoke(builder: HeadItemBuilder.() -> Unit): ItemStack =
+            HeadItemBuilder().apply(builder).build()
+    }
+
     /**
      * Fetches the head texture for the given name.
      *

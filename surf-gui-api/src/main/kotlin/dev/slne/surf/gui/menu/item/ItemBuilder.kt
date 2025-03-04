@@ -30,6 +30,14 @@ open class ItemBuilder {
     var enchantVisibility = true
     var modelData: Int? = null
 
+    companion object Builder {
+        operator fun invoke(itemType: ItemType, builder: ItemBuilder.() -> Unit): ItemStack =
+            ItemBuilder().apply {
+                itemType(itemType)
+                builder()
+            }.build()
+    }
+
     /**
      * Sets the item type of the ItemStack.
      *
@@ -174,9 +182,3 @@ open class ItemBuilder {
         return item.build()
     }
 }
-
-fun ItemBuilder(itemType: ItemType, builder: ItemBuilder.() -> Unit): ItemStack =
-    ItemBuilder().apply {
-        itemType(itemType)
-        builder()
-    }.build()
