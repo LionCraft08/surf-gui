@@ -5,7 +5,7 @@ import dev.slne.surf.gui.user.User
 import org.bukkit.Bukkit
 
 @Suppress("ClassName")
-object ContainerHelper1_21_4 : ContainerHelper {
+object ContainerHelper_1_21_4 : ContainerHelper {
 
     override fun getNextContainerId(user: User) =
         Bukkit.getPlayer(user.uuid)?.toNms()?.nextContainerCounter() ?: -1
