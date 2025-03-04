@@ -52,9 +52,7 @@ open class Menu(
     buttons: Int2ObjectMap<Button>,
     val cooldown: CooldownComponent = CooldownComponent.EMPTY, // TODO: Check this?
     private val coroutineScope: CoroutineScope = CoroutineScope(
-        Dispatchers.Default + CoroutineName(
-            "Menu-${name.toPlain()}"
-        )
+        Dispatchers.Default + CoroutineName("Menu-${name.toPlain()}")
     )
 ) {
     val buttons = mutableInt2ObjectMapOf(buttons).synchronize()
@@ -66,6 +64,20 @@ open class Menu(
 
     init {
         check(buttons.size <= type.size) { "Too many items in menu" }
+    }
+
+    companion object {
+        /**
+         * DSL to create a simple menu.
+         *
+         * @param type The [MenuType], defining the size and layout of the menu.
+         * @param builder A lambda to configure the menu.
+         * @return A fully configured [Menu].
+         */
+        inline operator fun invoke(
+            type: MenuType,
+            builder: @MenuBuilderDslMarker MenuBuilderDsl.() -> Unit
+        ) = MenuBuilderDsl(type).apply(builder).build()
     }
 
     /**
@@ -219,20 +231,6 @@ open class Menu(
 @Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS)
 @DslMarker
 annotation class MenuBuilderDslMarker
-
-/**
- * DSL to create a simple menu.
- *
- * @param type The [MenuType], defining the size and layout of the menu.
- * @param builder A lambda to configure the menu.
- * @return A fully configured [Menu].
- */
-inline fun menu(
-    type: MenuType,
-    builder: @MenuBuilderDslMarker MenuBuilderDsl.() -> Unit
-): Menu {
-    return MenuBuilderDsl(type).apply(builder).build()
-}
 
 /**
  * Builder class for creating a menu using a DSL.
