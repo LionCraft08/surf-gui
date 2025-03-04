@@ -19,8 +19,13 @@ import net.kyori.adventure.text.Component
 open class Button(
     var item: ItemStack,
     var execute: ExecutableComponent? = null,
-    var cooldown: CooldownComponent = CooldownComponent(0)
+    var cooldown: CooldownComponent = CooldownComponent.EMPTY
 ) {
+    companion object Builder {
+        operator fun invoke(builder: @ButtonBuilderDslMarker ButtonDslBuilder.() -> Unit): Button =
+            ButtonDslBuilder().apply(builder).build()
+    }
+
     /**
      * Executes the button's function
      *
@@ -83,6 +88,3 @@ open class ButtonDslBuilder() {
 @Target(AnnotationTarget.TYPE, AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
 @DslMarker
 annotation class ButtonBuilderDslMarker
-
-fun Button(builder: @ButtonBuilderDslMarker ButtonDslBuilder.() -> Unit): Button =
-    ButtonDslBuilder().apply(builder).build()
