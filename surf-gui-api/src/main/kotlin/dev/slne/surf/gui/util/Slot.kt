@@ -231,7 +231,7 @@ data class Slot(
 
 fun slot(x: Int, y: Int, gridWidth: Int = 9) = Slot(x, y, gridWidth)
 fun slot(absolute: Int, gridWidth: Int = 9) = Slot(absolute, gridWidth)
-infix fun Int.at(y: Int) = Slot(this, y)
+infix fun Int.at(y: Int) = Slot(x = this, y = y)
 infix fun Slot.width(width: Int) = copy(gridWidth = width)
 
 fun MenuBuilderDsl.slot(x: Int, y: Int) = Slot(x, y, this.type.size)
