@@ -1,0 +1,20 @@
+#File for documenting added Textures, does not provide any functionality.
+
+ - block
+ - next
+ - next_gray
+ - previous
+ - previous_gray
+ - plus
+ - minus
+ - not_available
+ - close
+ - cc_animated
+ - cc_animated_top
+ - cc_animated_bot
+ - check
+ - decline
+ - down
+ - down_gray
+ - up
+ - up_gray

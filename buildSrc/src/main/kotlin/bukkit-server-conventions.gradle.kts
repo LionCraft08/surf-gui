@@ -28,7 +28,7 @@ paper {
 
     foliaSupported = true
     apiVersion = "1.21"
-    authors = listOf("Ammo", "Twisti_twixi")
+    authors = listOf("Ammo", "Twisti_twixi", "LionK08")
     generateLibrariesJson = true
 
     serverDependencies {

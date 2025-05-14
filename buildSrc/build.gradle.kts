@@ -1,5 +1,7 @@
 plugins {
     `kotlin-dsl`
+    idea
+
 }
 
 repositories {
@@ -18,5 +20,5 @@ dependencies {
     implementation(libs.run.paper)
     implementation(libs.run.velocity)
     implementation(libs.plugin.yml)
-    implementation(libs.paper.userdev)
+    //implementation(libs.paper.userdev)
 }

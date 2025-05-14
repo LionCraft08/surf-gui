@@ -1,6 +1,7 @@
 package dev.slne.surf.gui.menu.item
 
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemCustomModelData
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemEnchantments
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemLore
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemProfile
@@ -72,7 +73,7 @@ class HeadItemBuilder : ItemBuilder() {
                 ComponentTypes.ENCHANTMENTS,
                 ItemEnchantments(enchantments, enchantVisibility)
             )
-        modelData?.let { item.component(ComponentTypes.CUSTOM_MODEL_DATA, it) }
+        modelData?.let { item.component(ComponentTypes.CUSTOM_MODEL_DATA_LISTS, ItemCustomModelData(null, null, listOf(it), null)) }
         name?.let { item.component(ComponentTypes.ITEM_NAME, it) }
 
         if (itemType == ItemTypes.PLAYER_HEAD) {

@@ -1,12 +1,15 @@
 package dev.slne.surf.gui.menu.item
 
+import com.github.retrooper.packetevents.protocol.color.Color
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes
+import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemCustomModelData
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemEnchantments
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemLore
 import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.protocol.item.enchantment.type.EnchantmentType
 import com.github.retrooper.packetevents.protocol.item.type.ItemType
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
+import com.github.retrooper.packetevents.util.Dummy
 import dev.slne.surf.gui.common.mutableObject2IntMapOf
 import dev.slne.surf.gui.common.mutableObjectListOf
 import dev.slne.surf.gui.common.toObjectArrayList
@@ -28,7 +31,8 @@ open class ItemBuilder {
     var amount = 1
     var enchantments = mutableObject2IntMapOf<EnchantmentType>()
     var enchantVisibility = true
-    var modelData: Int? = null
+    var modelData: String? = null
+    var visibleHover = true
 
     /**
      * Sets the item type of the ItemStack.
@@ -37,6 +41,8 @@ open class ItemBuilder {
      * @return This ItemBuilder.
      */
     fun itemType(itemType: ItemType) = apply { this.itemType = itemType }
+
+    fun visibleHover(visible:Boolean) = apply { visibleHover = visible }
 
     /**
      * Sets the name of the ItemStack.
@@ -153,7 +159,7 @@ open class ItemBuilder {
      * @param cmd The custom model data.
      * @return This ItemBuilder.
      */
-    fun customModelData(cmd: Int) = apply { this.modelData = cmd }
+    fun customModelData(cmd: String) = apply { this.modelData = cmd }
 
     /**
      * Builds the ItemStack.
@@ -169,8 +175,9 @@ open class ItemBuilder {
                 ComponentTypes.ENCHANTMENTS,
                 ItemEnchantments(enchantments, enchantVisibility)
             )
-        modelData?.let { item.component(ComponentTypes.CUSTOM_MODEL_DATA, it) }
+        modelData?.let { item.component(ComponentTypes.CUSTOM_MODEL_DATA_LISTS, ItemCustomModelData(mutableListOf<Float>(), mutableListOf<Boolean>(), listOf(it), mutableListOf<Color>()))}
         name?.let { item.component(ComponentTypes.ITEM_NAME, it) }
+        if (!visibleHover) item.component(ComponentTypes.HIDE_TOOLTIP, Dummy.dummy())
         return item.build()
     }
 }

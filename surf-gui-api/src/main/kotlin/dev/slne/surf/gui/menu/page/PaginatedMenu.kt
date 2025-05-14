@@ -9,6 +9,7 @@ import dev.slne.surf.gui.common.toObjectList
 import dev.slne.surf.gui.menu.button.Button
 import dev.slne.surf.gui.menu.button.ButtonBuilderDslMarker
 import dev.slne.surf.gui.menu.button.ButtonDslBuilder
+import dev.slne.surf.gui.menu.item.CustomItemProvider
 import dev.slne.surf.gui.menu.item.ItemBuilder
 import dev.slne.surf.gui.menu.item.ItemBuilderDslMarker
 import dev.slne.surf.gui.menu.menu.Menu
@@ -44,8 +45,8 @@ open class PaginatedMenu(
     private val nextPageButtonSlot: Slot,
 
     private val noPageItemStack: ItemStack = ItemStack.EMPTY,
-    private val nextPageItemStack: ItemStack = createNextPageStack(),
-    private val previousPageItemStack: ItemStack = createPreviousPageStack()
+    private val nextPageItemStack: ItemStack = CustomItemProvider("next").build(),
+    private val previousPageItemStack: ItemStack = CustomItemProvider("previous").build()
 ) : Menu(name, type, int2ObjectMapOf()) {
     private var currentPage = 0
     private val pages: ObjectList<Page>
@@ -89,7 +90,7 @@ open class PaginatedMenu(
         setPreviousPageButton()
         setNextPageButton()
 
-        viewers.forEach { (user, _) ->
+        viewers.forEach { user ->
             updateSlots(user)
         }
     }
@@ -141,8 +142,6 @@ open class PaginatedMenuDslBuilder(type: MenuType) : MenuBuilderDsl(type) {
     var previousPageButtonSlot = Slot(0)
     var nextPageButtonSlot = Slot(1)
     private var noPageItemStack: ItemStack = ItemStack.EMPTY
-    private var nextPageItemStack: ItemStack = createNextPageStack()
-    private var previousPageItemStack: ItemStack = createPreviousPageStack()
 
     /**
      * Add a button to the paginated menu.
@@ -173,21 +172,7 @@ open class PaginatedMenuDslBuilder(type: MenuType) : MenuBuilderDsl(type) {
         noPageItemStack(ItemBuilder().apply(builder).build())
     }
 
-    fun nextPageItemStack(itemStack: ItemStack) {
-        nextPageItemStack = itemStack
-    }
 
-    fun nextPageItemStack(builder: @ItemBuilderDslMarker ItemBuilder.() -> Unit) {
-        nextPageItemStack(ItemBuilder().apply(builder).build())
-    }
-
-    fun previousPageItemStack(itemStack: ItemStack) {
-        previousPageItemStack = itemStack
-    }
-
-    fun previousPageItemStack(builder: @ItemBuilderDslMarker ItemBuilder.() -> Unit) {
-        previousPageItemStack(ItemBuilder().apply(builder).build())
-    }
 
     @PublishedApi
     override fun build() = PaginatedMenu(
@@ -197,9 +182,7 @@ open class PaginatedMenuDslBuilder(type: MenuType) : MenuBuilderDsl(type) {
         buttonRange,
         previousPageButtonSlot,
         nextPageButtonSlot,
-        noPageItemStack,
-        nextPageItemStack,
-        previousPageItemStack
+        noPageItemStack
     )
 }
 
@@ -245,16 +228,6 @@ fun main() {
 
         noPageItemStack { // set the item stack for the no page item
             itemType = ItemTypes.BARRIER
-        }
-
-        nextPageItemStack {
-            itemType = ItemTypes.ARROW
-            name = Component.text("Next Page (custom set)")
-        }
-
-        previousPageItemStack {
-            itemType = ItemTypes.ARROW
-            name = Component.text("Previous Page (custom set)")
         }
     }
 }

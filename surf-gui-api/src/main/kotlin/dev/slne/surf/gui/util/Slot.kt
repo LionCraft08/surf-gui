@@ -4,6 +4,9 @@ import dev.slne.surf.gui.common.objectSetOf
 import dev.slne.surf.gui.menu.menu.MenuBuilderDsl
 import dev.slne.surf.gui.menu.menu.MenuType
 import it.unimi.dsi.fastutil.objects.ObjectSet
+import org.checkerframework.checker.index.qual.NonNegative
+import org.checkerframework.checker.index.qual.Positive
+import org.jetbrains.annotations.Range
 
 /**
  * Represents a range of [Slot]s, providing functionality to iterate over all slots in the range.
@@ -75,22 +78,25 @@ data class Slot(
 ) : Comparable<Slot> {
 
     init {
-        require(x in 0 until gridWidth) { "X must be between 0 and gridWidth - 1" }
-        require(y >= 0) { "Y must be greater or equal to 0" }
         require(gridWidth > 0) { "Grid width must be greater than 0" }
+        require(x < gridWidth) { "X must be between 0 and gridWidth - 1" }
+        require(y >= 0) { "Y must be greater or equal to 0" }
     }
 
     /**
      * Creates a new [Slot] from an absolute position in the grid.
      *
      * @param absolute The absolute position in the grid.
-     * @param gridWidth The width of the grid. Defaults to 9.
+     * @param gridWidth The width of the grid. Defaults to 9. Disabled because this constructor gets preferred over Slot(x, y)
      * @throws kotlin.IllegalArgumentException if `gridWidth` is invalid.
      */
-    constructor(absolute: Int, gridWidth: Int = 9) : this(
-        x = absolute % gridWidth,
-        y = absolute / gridWidth,
-        gridWidth = gridWidth
+    constructor(absolute: @NonNegative Int, /**gridWidth: Int = 9 **/) : this(
+        x = absolute
+            .apply {require(absolute > 0){"absolute must be grater than 0"}}
+                % 9
+                    .apply { require(9 > 0){"GridWith must be grater than 0"} },
+        y = absolute / 9,
+        gridWidth = 9
     )
 
     /**

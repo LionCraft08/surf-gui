@@ -46,33 +46,39 @@ open class ButtonDslBuilder() {
     private var click: ExecutableComponent? = null
     private var cooldown = CooldownComponent.EMPTY
 
-    fun item(item: ItemStack) {
+    fun item(item: ItemStack):ButtonDslBuilder {
         this.item = item
+        return this
     }
 
-    fun item(builder: @ButtonBuilderDslMarker ItemStack.Builder.() -> Unit) {
+    fun item(builder: @ButtonBuilderDslMarker ItemStack.Builder.() -> Unit):ButtonDslBuilder {
         item(ItemStack.builder().apply(builder).build())
+        return this
     }
 
-    fun itemBuilder(builder: @ButtonBuilderDslMarker ItemBuilder.() -> Unit) {
+    fun itemBuilder(builder: @ButtonBuilderDslMarker ItemBuilder.() -> Unit):ButtonDslBuilder {
         item(ItemBuilder().apply(builder).build())
+        return this
     }
 
-    fun onClick(click: @ButtonBuilderDslMarker ExecutableComponent) {
+    fun onClick(click: @ButtonBuilderDslMarker ExecutableComponent):ButtonDslBuilder {
         this.click = click
+        return this
     }
 
 
-    fun cooldown(cooldown: CooldownComponent) {
+    fun cooldown(cooldown: CooldownComponent):ButtonDslBuilder {
         this.cooldown = cooldown
+        return this
     }
 
     fun cooldown(
         delay: Long = 0,
         freeze: Long = 0,
         execute: @ButtonBuilderDslMarker ExecutableComponent? = null
-    ) {
+    ):ButtonDslBuilder {
         cooldown(CooldownComponent(delay, freeze, execute))
+        return this
     }
 
     internal open fun build(): Button {

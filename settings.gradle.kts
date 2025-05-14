@@ -7,6 +7,7 @@ rootProject.name = "surf-gui"
 // Root
 include("surf-gui-api")
 include("surf-gui-bukkit")
+include("surf-gui-velocity")
 
 // NMS
 include("surf-gui-nms:surf-gui-nms-common")

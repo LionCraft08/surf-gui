@@ -1,0 +1,12 @@
+#  System loggers levels. A level has a name and severity. Level values are ALL, TRACE, DEBUG, INFO, WARNING, ERROR, OFF, by order of increasing severity.
+#    ALL and OFF are simple markers with severities mapped respectively to Integer.MIN_VALUE and Integer.MAX_VALUE.
+#    Severity values and Mapping to java.util.logging.Level.
+#    System logger levels are mapped to java.util.logging levels of corresponding severity.
+#  The mapping is as follows:
+#
+#
+#    System.Logger Severity Level Mapping
+#    System.Logger Levels
+#    java.util.logging Levels
+
+logger-level: WARNING

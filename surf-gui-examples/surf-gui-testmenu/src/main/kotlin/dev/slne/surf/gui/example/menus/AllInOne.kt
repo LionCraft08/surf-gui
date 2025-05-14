@@ -52,7 +52,6 @@ class AllInOne {
                         }
                     }
                 }
-
                 delay(1.seconds)
             }
         }

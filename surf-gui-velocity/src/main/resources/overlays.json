@@ -1,0 +1,12 @@
+[
+  {"name": "top_occupied", "shift": -8, "code": "\uef06", "textShift": -168},
+  {"name": "top_bottom_occupied", "shift": -8, "code": "\uef07", "textShift": -168},
+  {"name": "bottom_occupied", "shift": -8, "code": "\uef08", "textShift": -168},
+  {"name": "1_items", "shift": -8, "code": "\uef09", "textShift": -168},
+  {"name": "2_items", "shift": -8, "code": "\uef10", "textShift": -168},
+  {"name": "default", "shift": -24, "code": "\uef11", "textShift": -168},
+  {"name": "default_without_previous", "shift": -8, "code": "\uef12", "textShift": -168},
+  {"name": "main_menu", "shift": -28, "code": "\uef13", "textShift": -168},
+  {"name": "confirm", "shift": -8, "code": "\uef14", "textShift": -168},
+  {"name": "textinput", "shift": -8, "code": "\uef15", "textShift": -168}
+]

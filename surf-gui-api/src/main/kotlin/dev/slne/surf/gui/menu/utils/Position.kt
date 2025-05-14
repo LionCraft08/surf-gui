@@ -1,6 +1,7 @@
 package dev.slne.surf.gui.menu.utils
 
 import dev.slne.surf.gui.menu.menu.MenuType
+import dev.slne.surf.gui.util.SlotRange
 
 /**
  * Represents a range of positions.
@@ -12,6 +13,7 @@ import dev.slne.surf.gui.menu.menu.MenuType
  * @see ClosedRange
  * @see Iterable
  */
+@Deprecated(replaceWith = ReplaceWith("SlotRange"), message = "Not useful")
 class PositionRange(
     override val start: Position,
     override val endInclusive: Position
@@ -38,6 +40,7 @@ class PositionRange(
 /**
  * Represents a position in a grid.
  */
+@Deprecated(replaceWith = ReplaceWith("Slot"), message = "Not useful")
 class Position() : Cloneable, Comparable<Position> {
 
     /**
@@ -318,6 +321,7 @@ class Position() : Cloneable, Comparable<Position> {
  * @param gridWidth The width of the grid.
  * @return The created position.
  */
+@Deprecated(replaceWith = ReplaceWith("SlotRange"), message = "Not useful")
 fun position(x: Int, y: Int, gridWidth: Int = 9) = Position(x, y, gridWidth)
 
 

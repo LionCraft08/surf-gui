@@ -1,13 +1,18 @@
 package dev.slne.surf.gui.user
 
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerOpenBook
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerOpenWindow
+import dev.slne.surf.gui.common.mutableObjectListOf
 import dev.slne.surf.gui.menu.menu.Menu
 import java.util.*
+import kotlin.collections.ArrayList
 
 abstract class AbstractUser(
     override val uuid: UUID
 ) : User {
 
     private var activeMenu: Menu? = null
+    private var menuTree:List<String> = mutableObjectListOf()
 
     override fun getActiveMenu() = activeMenu
 
@@ -35,6 +40,10 @@ abstract class AbstractUser(
 
     override fun toString(): String {
         return "AbstractUser(uuid=$uuid)"
+    }
+
+    override fun closeCurrentMenu() {
+        getActiveMenu()?.close(this)
     }
 
 }

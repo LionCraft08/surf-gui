@@ -4,19 +4,29 @@ import com.github.retrooper.packetevents.protocol.item.ItemStack
 import com.github.retrooper.packetevents.protocol.item.type.ItemTypes
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindow
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindow.WindowClickType
+import dev.slne.surf.gui.SurfGuiApi
 import dev.slne.surf.gui.common.*
+import dev.slne.surf.gui.communication.CommunicationHandler
 import dev.slne.surf.gui.dto.AccumulatedDrag
 import dev.slne.surf.gui.menu.button.Button
 import dev.slne.surf.gui.menu.button.ButtonType
+import dev.slne.surf.gui.menu.button.buttons.TextInputConfirmButton
 import dev.slne.surf.gui.menu.button.click.ClickData
 import dev.slne.surf.gui.menu.button.click.ClickType
 import dev.slne.surf.gui.menu.button.click.ExecuteComponent
+import dev.slne.surf.gui.menu.button.click.TextExecuteComponent
+import dev.slne.surf.gui.menu.menu.specific.TextInputMenu
 import dev.slne.surf.gui.user.User
+import dev.slne.surf.gui.util.DM
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import it.unimi.dsi.fastutil.objects.Object2ObjectFunction
 import it.unimi.dsi.fastutil.objects.ObjectList
+import net.kyori.adventure.text.Component
+import java.lang.RuntimeException
 import java.util.*
 
+
+val log = SurfGuiApi.getInstance()
 val menuService = MenuService
 
 /**
@@ -24,33 +34,96 @@ val menuService = MenuService
  */
 object MenuService {
 
-    private val _menus = mutableObjectSetOf<Menu>()
+    private val menus = mutableObject2ObjectMapOf<String, Class<out Menu>>()
     private val carriedItem = mutableObject2ObjectMapOf<User, ItemStack>().synchronize()
     private val accumulatedDrag =
         mutableObject2ObjectMapOf<User, ObjectList<AccumulatedDrag>>().synchronize()
-
-    val menus = _menus.freeze()
 
     /**
      * Add a menu to the service.
      *
      * @param menu The menu to add.
      */
-    fun addMenu(menu: Menu) {
-        _menus.add(menu)
+    fun registerNewMenu(id: String, clazz: Class<out Menu>) {
+        if (id.contains(":")) log.log("The ID $id contains ':' wich is not allowed. The Registered Menu probably won't be openable by the System", System.Logger.Level.ERROR)
+        menus.put(id, clazz)
     }
 
     /**
      * Remove a menu from the service.
-     *
-     * @param menu The menu to remove.
+     * @param id The menu to remove.
      */
-    fun removeMenu(menu: Menu) {
-        _menus.remove(menu)
+    fun unregisterMenu(id: String) = menus.remove(id)
+
+    /**Gets the Class of a registered Menu
+     * @param id The ID of the Menu
+     * @return The CLass of a registered Menu if available
+     */
+    fun getMenu(id: String): Class<out Menu>? = menus.get(id)
+
+    fun isMenuRegistered(menuID: String):Boolean{
+        return if(menuID == "book") true else menus.contains(menuID)
+    }
+
+    fun openMenu(user: User, menuArgs: String){
+        //Splitting the id into id and parameter
+        var menuID = menuArgs
+        var args = ""
+        if (menuID.contains(":")){
+            args = menuID.substringAfter(":")
+            menuID = menuID.substringBefore(":")
+        }
+
+        user.getActiveMenu()?.close(user)
+
+
+        if (menuID.startsWith("book")){
+            user.openBook(args.substringAfter(":"))
+            return
+        }
+
+
+
+        val menuClass = getMenu(menuID)
+        if (menuClass == null) {
+            CommunicationHandler.sendInventoryRequest(user.uuid, menuArgs)
+            return
+        }
+        var menu: Menu? = null
+
+        //Attempt to open Menu with args
+        if (args.isNotBlank()){
+            try {
+                menu = menuClass.getConstructor(String::class.java).newInstance()
+                menu.open(user)
+            }catch (e: NoSuchMethodException){
+                log.log("User ${user.uuid} tried to open $menuID with args $args but this Menu doesn't support args.",
+                    System.Logger.Level.WARNING )
+            }
+        }
+        //Attempt to open Menu without args
+         if (menu == null) try {
+             menu = menuClass.getConstructor().newInstance()
+             menu.open(user)
+         }catch (e: NoSuchMethodException){
+             user.sendMessage(DM.fatalError("Dieses Menu ist leider derzeit nicht verfügbar. Sollte dieser Fehler weiterhin bestehen, melde ihn bitte über Discord."))
+             throw RuntimeException("MenuClass $menuID (${menuClass.name}) is Invalid because it has either not been registered or does not have a Constructor without parameters.")
+         }
+
+        user.addOpenedMenu(menuArgs)
+    }
+
+    fun openMenu(user: User, menuID: String, args: String){
+        openMenu(user, "$menuID:$args")
+    }
+
+    fun getAvailableMenus(): List<String> {
+        return menus.keys.toList()
     }
 
     /**
      * Close a menu for a user.
+     * Internal use, u should use [Menu.close] instead
      *
      * @param user The user to close the menu for.
      */
@@ -103,6 +176,7 @@ object MenuService {
         val cooldown = button.cooldown.combine(menu.cooldown)
 
         menu.sendWindowItems(user, carriedItem)
+        user.updateInventory()
 
         val executeComponent = ExecuteComponent(user, clickData.buttonType, slot, carriedItem, menu)
 
@@ -115,8 +189,10 @@ object MenuService {
         } else {
             button.cooldown.resetExpire()
         }
-
-        button.onClick(executeComponent)
+        if (button is TextInputConfirmButton)
+            button.textExecute.invoke(TextExecuteComponent(user, clickData.buttonType, slot, carriedItem, menu,
+                (menu as TextInputMenu).text))
+        else button.onClick(executeComponent)
     }
 
     /**

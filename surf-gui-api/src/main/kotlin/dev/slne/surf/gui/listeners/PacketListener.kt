@@ -5,9 +5,11 @@ import com.github.retrooper.packetevents.event.PacketListenerPriority
 import com.github.retrooper.packetevents.event.PacketReceiveEvent
 import com.github.retrooper.packetevents.protocol.packettype.PacketType
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindow
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientClickWindowButton
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientNameItem
 import dev.slne.surf.gui.menu.button.click.ClickType
-import dev.slne.surf.gui.menu.menu.findMatchingMenu
 import dev.slne.surf.gui.menu.menu.menuService
+import dev.slne.surf.gui.menu.menu.specific.TextInputMenu
 import dev.slne.surf.gui.user.UserManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +28,7 @@ object PacketListener : PacketListenerAbstract(PacketListenerPriority.HIGHEST) {
 
         // Handle close window packet first
         if (packetType == PacketType.Play.Client.CLOSE_WINDOW) {
-            packetScope.launch { // TODO: Check me twisti
+            packetScope.launch {
                 menu?.close(user)
             }
 
@@ -34,6 +36,12 @@ object PacketListener : PacketListenerAbstract(PacketListenerPriority.HIGHEST) {
             return
         }
 
+        if (packetType == PacketType.Play.Client.NAME_ITEM){
+            val packet = WrapperPlayClientNameItem(event)
+            if (menu is TextInputMenu)
+                menu.text = packet.itemName
+            return
+        }
         // Check if packet is click window, if not exit
         if (packetType != PacketType.Play.Client.CLICK_WINDOW) {
             return
@@ -41,8 +49,8 @@ object PacketListener : PacketListenerAbstract(PacketListenerPriority.HIGHEST) {
 
         val packet = WrapperPlayClientClickWindow(event)
 
-        // Check if clicked window is an actual menu, if not exit
-        if (findMatchingMenu(user, packet.windowId) == null) {
+        // Check if the clicked window is an actual menu, if not exit
+        if (menu == null) {
             return
         }
 
@@ -61,7 +69,7 @@ object PacketListener : PacketListenerAbstract(PacketListenerPriority.HIGHEST) {
         // Check if click is a menu click or inventory click
         if (menuClickData) {
             menuService.handleClickMenu(user, clickData, packet.slot)
-            user.updateInventory()
+            //user.updateInventory() Just why?
         } else { // isInventoryClick
             menuService.handleClickInventory(user, packet)
         }

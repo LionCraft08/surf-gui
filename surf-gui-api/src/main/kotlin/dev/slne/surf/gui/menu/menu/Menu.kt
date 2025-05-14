@@ -1,9 +1,14 @@
 package dev.slne.surf.gui.menu.menu
 
 import com.github.retrooper.packetevents.protocol.item.ItemStack
+import com.github.retrooper.packetevents.wrapper.PacketWrapper
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerCloseWindow
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerOpenSignEditor
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerOpenWindow
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSetSlot
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowItems
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowProperty
+import dev.slne.surf.gui.SurfGuiApi
 import dev.slne.surf.gui.api
 import dev.slne.surf.gui.common.*
 import dev.slne.surf.gui.dto.CooldownComponent
@@ -21,21 +26,12 @@ import dev.slne.surf.gui.util.SlotRange
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap
 import kotlinx.coroutines.*
 import net.kyori.adventure.text.Component
+import org.jetbrains.annotations.NotNull
 
 /**
  * A job that can be launched in a menu.
  */
 typealias MenuJob = suspend CoroutineScope.() -> Unit
-
-/**
- * Finds a menu that matches the given container ID.
- *
- * @param user The user to find the menu for.
- * @param containerId The container ID to match.
- * @return The matching menu, or null if no menu matches.
- */
-fun findMatchingMenu(user: User, containerId: Int) =
-    menuService.menus.find { it.getContainerId(user) == containerId }
 
 /**
  * Represents a menu.
@@ -46,11 +42,11 @@ fun findMatchingMenu(user: User, containerId: Int) =
  * @param cooldown The cooldown of the menu.
  * @param coroutineScope The coroutine scope of the menu.
  */
-open class Menu(
-    val name: Component,
+abstract class Menu(
+    protected open val name: Component,
     val type: MenuType,
     buttons: Int2ObjectMap<Button>,
-    val cooldown: CooldownComponent = CooldownComponent.EMPTY, // TODO: Check this?
+    var cooldown: CooldownComponent = CooldownComponent.EMPTY,
     private val coroutineScope: CoroutineScope = CoroutineScope(
         Dispatchers.Default + CoroutineName(
             "Menu-${name.toPlain()}"
@@ -58,7 +54,8 @@ open class Menu(
     )
 ) {
     val buttons = mutableInt2ObjectMapOf(buttons).synchronize()
-    val viewers = mutableObject2IntMapOf<User>().synchronize()
+    val viewers = mutableObjectListOf<User>().synchronize()
+
 
     private var menuScope = CoroutineScope(coroutineScope.coroutineContext + SupervisorJob())
     private val blocks = mutableObjectListOf<MenuJob>()
@@ -78,12 +75,19 @@ open class Menu(
         blocks.add(block)
     }
 
+    fun setButton(int: Int, button: Button?){
+        if(button == null) buttons.remove(int)
+        else buttons.put(int, button)
+    }
+
+    fun setButton(slot: Slot, button: Button?) = setButton(slot.toSlot(), button)
+
     /**
      * Opens the menu for the given user.
      *
      * @param user The user to open the menu for.
      */
-    suspend fun open(user: User) {
+     fun open(user: User) {
         if (shouldRelaunch) {
             shouldRelaunch = false
             menuScope = CoroutineScope(coroutineScope.coroutineContext + SupervisorJob())
@@ -93,15 +97,11 @@ open class Menu(
             }
         }
 
-        val containerId = api.getNextContainerId(user)
-
-        viewers.put(user, containerId)
+        viewers.add(user)
         (user as AbstractUser).setActiveMenu(this)
-
-        user.sendPacket(WrapperPlayServerOpenWindow(containerId, type.id(), name))
+        user.sendPacket(WrapperPlayServerOpenWindow(100, type.id(), name))
         sendWindowItems(user)
 
-        menuService.addMenu(this)
     }
 
     fun updateItem(user: User, slot: Slot, item: ItemStack) = updateItem(user, slot.toSlot(), item)
@@ -137,25 +137,22 @@ open class Menu(
      * @param carriedItem The item the user is carrying.
      */
     fun sendWindowItems(user: User, carriedItem: ItemStack? = null) {
-        val containerId = getContainerId(user) ?: return
 
         val items = MutableList(type.size) { index ->
             this.buttons[index]?.item ?: ItemStack.EMPTY
         }
 
-        user.sendPacket(WrapperPlayServerWindowItems(containerId, 0, items, carriedItem))
+        SurfGuiApi.getInstance().log("Sending Items to player: "+items.size, System.Logger.Level.DEBUG)
+        user.sendPacket(WrapperPlayServerWindowItems(100, 0, items, carriedItem))
     }
 
     /**
      * Updates the slots in the menu for the given user.
-     *
      * @param user The user to update the slots for.
      */
     fun updateSlots(user: User) {
-        val containerId = getContainerId(user) ?: return
-
         for ((slot, button) in buttons) {
-            user.sendPacket(WrapperPlayServerSetSlot(containerId, 0, slot, button.item))
+            user.sendPacket(WrapperPlayServerSetSlot(0, 0, slot, button.item))
         }
     }
 
@@ -164,18 +161,20 @@ open class Menu(
      *
      * @param user The user to close the menu for.
      */
-    suspend fun close(user: User) {
-        viewers.removeInt(user)
+     fun close(user: User) {
+        viewers.remove(user)
 
-        val hasOpenedContainer = api.hasOpenedContainer(user)
+        (user as AbstractUser).setActiveMenu(null)
 
-        if (!hasOpenedContainer) {
-            (user as AbstractUser).setActiveMenu(null)
-        }
 
         if (viewers.isEmpty()) {
             destroy()
         }
+
+        user.sendPacket(WrapperPlayServerCloseWindow())
+
+        //Resending the Player its Inv Items, necessary until item split drags are fixed
+        user.updateInventory()
     }
 
     /**
@@ -184,15 +183,9 @@ open class Menu(
     private fun destroy() {
         menuScope.cancel()
         shouldRelaunch = true
-
-        println("Destroying menu ${name.toPlain()}")
-
-        menuService.removeMenu(this)
+        SurfGuiApi.getInstance().log("Destroying menu ${name.toPlain()}", System.Logger.Level.DEBUG)
     }
 
-    fun getContainerId(user: User): Int? {
-        return viewers.getInt(user)
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -376,7 +369,7 @@ open class MenuBuilderDsl(val type: MenuType) {
      */
     @PublishedApi
     internal open fun build(): Menu {
-        return Menu(name, type, menuButtons, cooldown)
+        return DefaultMenu(name, type, menuButtons).also { it.cooldown = cooldown }
     }
 }
 

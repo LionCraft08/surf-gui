@@ -2,7 +2,12 @@ package dev.slne.surf.gui
 
 import com.github.retrooper.packetevents.PacketEvents
 import dev.slne.surf.gui.listeners.PacketListener
+import dev.slne.surf.gui.menu.menu.MenuService
+import dev.slne.surf.gui.menu.menu.specific.MainMenu
+import dev.slne.surf.gui.menu.menu.specific.TestMenu
 import dev.slne.surf.gui.user.User
+import org.slf4j.Logger
+import java.io.File
 import java.util.*
 
 internal val api get() = SurfGuiApi.getInstance()
@@ -22,21 +27,15 @@ abstract class SurfGuiApi {
      */
     abstract fun createNewUser(uuid: UUID): User
 
-    /**
-     * Gets the next container ID for the user.
-     *
-     * @param user The user.
-     * @return The next container ID.
-     */
-    abstract suspend fun getNextContainerId(user: User): Int
+    abstract suspend fun sendMenuMessage(uuid: String, channel: String, data: ByteArray)
 
-    /**
-     * Checks if the user has an opened container.
-     *
-     * @param user The user.
-     * @return True if the user has an opened container, false otherwise.
-     */
-    abstract suspend fun hasOpenedContainer(user: User): Boolean
+    abstract fun getDataFile(): File
+
+    abstract fun log(message: String, level: System.Logger.Level = System.Logger.Level.INFO)
+
+    fun debug(message: String){
+        log(message, System.Logger.Level.DEBUG)
+    }
 
     /**
      * Initializes the API.
@@ -55,6 +54,10 @@ abstract class SurfGuiApi {
 
         packetEvents.eventManager.registerListener(PacketListener)
 
+        MenuService.registerNewMenu("main_menu", MainMenu::class.java)
+        MenuService.registerNewMenu("test_menu", TestMenu::class.java)
+
+
         initialized = true
     }
 
@@ -69,6 +72,7 @@ abstract class SurfGuiApi {
 
     companion object {
         private var instance: SurfGuiApi? = null
+        private var backend: Boolean? = null;
 
         /**
          * Gets the instance of the API.
@@ -83,13 +87,19 @@ abstract class SurfGuiApi {
             return instance!!
         }
 
+        fun isBackend(): Boolean{
+            if (backend == null) throw IllegalStateException("SurfGuiApi has not been initialized yet.")
+            return backend!!
+        }
+
         /**
          * Sets the instance of the API.
          *
          * @param api The instance of the API.
          */
-        fun setInstance(api: SurfGuiApi) {
+        fun setInstance(api: SurfGuiApi, backend: Boolean) {
             instance = api
+            Companion.backend = backend;
         }
     }
 }

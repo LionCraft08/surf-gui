@@ -6,7 +6,7 @@ plugins {
 }
 
 paper {
-    main = "dev.slne.surf.gui.SurfGuiPlugin"
+    main = "dev.slne.surf.gui.SurfGuiBukkitPlugin"
     loader = "dev.slne.surf.gui.bukkit.SurfGuiBukkitLoader"
 }
 
@@ -24,6 +24,9 @@ dependencies {
     paperLibrary(libs.gson)
 
     // NMS
-    api(project(":surf-gui-nms:surf-gui-nms-1_21_1"))
-    api(project(":surf-gui-nms:surf-gui-nms-1_21_4"))
+    //api(project(":surf-gui-nms:surf-gui-nms-1_21_1"))
+    //api(project(":surf-gui-nms:surf-gui-nms-1_21_4"))
+}
+tasks.shadowJar {
+    destinationDirectory.set(layout.buildDirectory.dir("C:\\Users\\Anwender\\IdeaProjects\\surf-social\\surf-friends\\run\\plugins"))
 }
