@@ -4,7 +4,6 @@ import dev.slne.surf.gui.common.int2ObjectMapOf
 import dev.slne.surf.gui.common.mutableInt2ObjectMapOf
 import dev.slne.surf.gui.menu.button.Button
 import dev.slne.surf.gui.menu.button.click.ExecutableComponent
-import dev.slne.surf.gui.menu.button.click.ExecuteComponent
 import dev.slne.surf.gui.menu.item.CustomItemProvider
 import dev.slne.surf.gui.menu.menu.DefaultMenu
 import dev.slne.surf.gui.menu.menu.Menu

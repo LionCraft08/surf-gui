@@ -15,4 +15,4 @@ include("surf-gui-nms:surf-gui-nms-1_21_1")
 include("surf-gui-nms:surf-gui-nms-1_21_4")
 
 // Examples
-include("surf-gui-examples:surf-gui-testmenu")
+//include("surf-gui-examples:surf-gui-testmenu")

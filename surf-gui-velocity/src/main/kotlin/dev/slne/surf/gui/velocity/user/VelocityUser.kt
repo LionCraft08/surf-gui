@@ -3,6 +3,7 @@ package dev.slne.surf.gui.velocity.user
 import com.github.retrooper.packetevents.PacketEvents
 import com.github.retrooper.packetevents.protocol.player.User
 import com.velocitypowered.api.proxy.Player
+import dev.slne.surf.gui.common.toPlain
 import dev.slne.surf.gui.communication.CommunicationHandler
 import dev.slne.surf.gui.menu.menu.MenuService
 import dev.slne.surf.gui.user.AbstractUser
@@ -29,13 +30,17 @@ class VelocityUser(override val uuid: UUID) : AbstractUser(uuid){
         else MenuService.openMenu(this, inventoryStackTrace.last())
     }
 
+    override fun getNewContainerID(): Int {
+        return getCurrentContainerID()+1
+    }
+
     override fun closeCurrentMenu() {
         super.closeCurrentMenu()
         inventoryStackTrace.clear()
     }
 
-    override fun openBook(book: String) {
-        CommunicationHandler.sendInventoryRequest(uuid, "book:$book")
+    override fun openBook(book: Book) {
+        CommunicationHandler.sendInventoryRequest(uuid, "book:${book.title().toPlain()}")
     }
 
     override fun addOpenedMenu(id: String) {

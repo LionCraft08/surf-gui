@@ -50,6 +50,7 @@ class HeadItemBuilder : ItemBuilder() {
         println("Fetching head texture for UUID: $uuid")
         SkinFetcherScope.launch {
             val properties = PlayerSkinFetcher.fetchSkin(uuid)
+            println(properties.joinToString("\n") { "${it.name}: ${it.value}" })
             val texture = properties.firstOrNull { it.name == "textures" }
             if (texture != null) {
                 base64 = texture.value

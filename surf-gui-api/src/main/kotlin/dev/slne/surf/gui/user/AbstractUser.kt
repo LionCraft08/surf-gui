@@ -13,6 +13,7 @@ abstract class AbstractUser(
 
     private var activeMenu: Menu? = null
     private var menuTree:List<String> = mutableObjectListOf()
+    private var id: Int = 0
 
     override fun getActiveMenu() = activeMenu
 
@@ -41,6 +42,17 @@ abstract class AbstractUser(
     override fun toString(): String {
         return "AbstractUser(uuid=$uuid)"
     }
+
+    override fun getCurrentContainerID(): Int {
+        return id
+    }
+
+    override fun getNextContainerID(): Int {
+        id = getNewContainerID()
+        return id
+    }
+
+    abstract fun getNewContainerID():Int
 
     override fun closeCurrentMenu() {
         getActiveMenu()?.close(this)

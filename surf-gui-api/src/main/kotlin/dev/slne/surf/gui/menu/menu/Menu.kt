@@ -60,6 +60,7 @@ abstract class Menu(
     private var menuScope = CoroutineScope(coroutineScope.coroutineContext + SupervisorJob())
     private val blocks = mutableObjectListOf<MenuJob>()
     private var shouldRelaunch = false
+    var registerInStackTrace = true
 
     init {
         check(buttons.size <= type.size) { "Too many items in menu" }
@@ -99,7 +100,7 @@ abstract class Menu(
 
         viewers.add(user)
         (user as AbstractUser).setActiveMenu(this)
-        user.sendPacket(WrapperPlayServerOpenWindow(100, type.id(), name))
+        user.sendPacket(WrapperPlayServerOpenWindow(user.getNextContainerID(), type.id(), name))
         sendWindowItems(user)
 
     }
@@ -117,6 +118,7 @@ abstract class Menu(
 
         sendWindowItems(user)
     }
+
 
     /**
      * Updates the button in the menu at the given slot.
@@ -143,7 +145,7 @@ abstract class Menu(
         }
 
         SurfGuiApi.getInstance().log("Sending Items to player: "+items.size, System.Logger.Level.DEBUG)
-        user.sendPacket(WrapperPlayServerWindowItems(100, 0, items, carriedItem))
+        user.sendPacket(WrapperPlayServerWindowItems(user.getCurrentContainerID(), 0, items, carriedItem))
     }
 
     /**

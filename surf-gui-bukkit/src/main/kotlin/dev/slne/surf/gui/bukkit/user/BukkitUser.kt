@@ -1,7 +1,7 @@
 package dev.slne.surf.gui.bukkit.user
 
 import com.github.retrooper.packetevents.PacketEvents
-import dev.slne.surf.gui.bukkit.books.BookProvider
+import dev.slne.surf.gui.menu.menu.BookProvider
 import dev.slne.surf.gui.bukkit.extensions.toPlayer
 import dev.slne.surf.gui.communication.CommunicationHandler
 import dev.slne.surf.gui.user.AbstractUser
@@ -17,8 +17,8 @@ class BukkitUser(override val uuid: UUID) : AbstractUser(uuid) {
         player?.updateInventory()
     }
 
-    override fun openBook(book: String) {
-        BookProvider.open(book, player!!)
+    override fun openBook(book: Book) {
+        player!!.openBook(book)
     }
 
     override fun openPreviousMenu() {
@@ -37,6 +37,10 @@ class BukkitUser(override val uuid: UUID) : AbstractUser(uuid) {
 
     override fun sendMessage(message: Component) {
         player?.sendMessage(message)?:println("Error 1")
+    }
+
+    override fun getNewContainerID(): Int {
+        return getCurrentContainerID()+1
     }
 
 }

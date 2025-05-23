@@ -13,7 +13,8 @@ getName(pages, selectedPage),
 
 }
 fun getName(pages: Int,selectedPage:Int): String{
-    val slices = if (pages<=4) pages
+    val slices = if (pages==0) 1
+        else if (pages<=4) pages
         else if (pages<=8) 8
         else 16
     val position = if (pages<=4) selectedPage

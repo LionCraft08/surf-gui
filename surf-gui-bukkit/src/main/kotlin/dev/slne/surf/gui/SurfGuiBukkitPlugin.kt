@@ -2,7 +2,7 @@ package dev.slne.surf.gui
 
 import com.github.retrooper.packetevents.PacketEvents
 import dev.slne.surf.gui.bukkit.SurfGuiBukkitApi
-import dev.slne.surf.gui.bukkit.books.BookProvider
+import dev.slne.surf.gui.menu.menu.BookProvider
 import dev.slne.surf.gui.bukkit.commands.SurfGuiCommand
 import dev.slne.surf.gui.bukkit.controller.BukkitListener
 import dev.slne.surf.gui.bukkit.controller.PluginMessageReceiver

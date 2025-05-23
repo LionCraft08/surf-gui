@@ -42,7 +42,7 @@ interface User {
      */
     fun closeCurrentMenu()
 
-    fun openBook(book: String)
+    fun openBook(book: Book)
 
     /**
      * Uses stacked Menus to track the order of the opened Menus.
@@ -75,4 +75,8 @@ interface User {
      * @param message The message to send
      */
     fun sendMessage(message: Component)
+
+    fun getCurrentContainerID():Int
+
+    fun getNextContainerID():Int
 }

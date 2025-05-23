@@ -41,8 +41,8 @@ class MainMenu(): DefaultMenu(Component.text(" "), MenuType.GENERIC9X6, int2Obje
                 "<gradient:#0099FF:#8888FF>Freunde".toComponent(),
                 "Öffnet ein Menu, um deine Freunde <br>und Anfragen zu verwalten.".toLoreComponents()
             ).toButton { (user, buttonType, slot, itemStack, menu) ->
-                MenuService.openMenu(user, "friends")//TODO Create this menu in Surf Friends
-            })//FIXME Maybe move that to the Friends Plugin?
+                MenuService.openMenu(user, "friends:${user.uuid}")
+            })
         setButton(Slot(7, 3),
             CustomItemProvider("clan",//TODO Create this icon
                 true,

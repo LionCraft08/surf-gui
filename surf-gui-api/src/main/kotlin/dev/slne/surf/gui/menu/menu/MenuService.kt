@@ -77,8 +77,8 @@ object MenuService {
         user.getActiveMenu()?.close(user)
 
 
-        if (menuID.startsWith("book")){
-            user.openBook(args.substringAfter(":"))
+        if (menuID.startsWith("book:")){
+            BookProvider.open(menuID.substringAfter("book:"), user)
             return
         }
 
@@ -94,13 +94,19 @@ object MenuService {
         //Attempt to open Menu with args
         if (args.isNotBlank()){
             try {
-                menu = menuClass.getConstructor(String::class.java).newInstance()
+                menu = menuClass.getConstructor(String::class.java).newInstance(args)
                 menu.open(user)
             }catch (e: NoSuchMethodException){
                 log.log("User ${user.uuid} tried to open $menuID with args $args but this Menu doesn't support args.",
                     System.Logger.Level.WARNING )
             }
         }
+        //Attempt to open Menu with User parameter
+        if (menu == null) try {
+            menu = menuClass.getConstructor(User::class.java).newInstance(user)
+            menu.open(user)
+        }catch (_: NoSuchMethodException){ }
+
         //Attempt to open Menu without args
          if (menu == null) try {
              menu = menuClass.getConstructor().newInstance()
@@ -109,8 +115,7 @@ object MenuService {
              user.sendMessage(DM.fatalError("Dieses Menu ist leider derzeit nicht verfügbar. Sollte dieser Fehler weiterhin bestehen, melde ihn bitte über Discord."))
              throw RuntimeException("MenuClass $menuID (${menuClass.name}) is Invalid because it has either not been registered or does not have a Constructor without parameters.")
          }
-
-        user.addOpenedMenu(menuArgs)
+        if (menu.registerInStackTrace) user.addOpenedMenu(menuArgs)
     }
 
     fun openMenu(user: User, menuID: String, args: String){

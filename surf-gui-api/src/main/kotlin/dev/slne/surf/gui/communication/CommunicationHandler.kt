@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.kyori.adventure.inventory.Book
+import java.nio.charset.StandardCharsets
 import java.util.UUID
 
 object CommunicationHandler {
@@ -18,13 +19,13 @@ object CommunicationHandler {
 
     fun sendInventoryRequest(uuid: UUID, id: String){
         scope.launch {
-            SurfGuiApi.getInstance().sendMenuMessage(uuid.toString(), CHANNEL_OPEN, id.toByteArray())
+            SurfGuiApi.getInstance().sendMenuMessage(uuid.toString(), CHANNEL_OPEN, id.toByteArray(StandardCharsets.UTF_8))
         }
     }
 
     fun sendInventoryStackCommand(uuid: UUID, msg: String){
         scope.launch {
-            SurfGuiApi.getInstance().sendMenuMessage(uuid.toString(), CHANNEL_COMMANDS, msg.toByteArray())
+            SurfGuiApi.getInstance().sendMenuMessage(uuid.toString(), CHANNEL_COMMANDS, msg.toByteArray(StandardCharsets.UTF_8))
         }
     }
 

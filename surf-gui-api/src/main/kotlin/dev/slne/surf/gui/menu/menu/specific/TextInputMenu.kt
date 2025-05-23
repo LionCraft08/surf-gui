@@ -5,7 +5,6 @@ import dev.slne.surf.gui.common.toComponent
 import dev.slne.surf.gui.menu.button.Button
 import dev.slne.surf.gui.menu.button.buttons.TextInputConfirmButton
 import dev.slne.surf.gui.menu.button.click.ExecutableComponent
-import dev.slne.surf.gui.menu.button.click.ExecuteComponent
 import dev.slne.surf.gui.menu.button.click.TextExecutableComponent
 import dev.slne.surf.gui.menu.item.CustomItemProvider
 import dev.slne.surf.gui.menu.menu.DefaultMenu

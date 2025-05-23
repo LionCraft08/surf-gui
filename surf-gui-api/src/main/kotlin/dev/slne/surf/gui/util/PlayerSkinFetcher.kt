@@ -38,22 +38,34 @@ object PlayerSkinFetcher {
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun fetchSkin0(uuid: UUID): List<TextureProperty> {
         val request = Request.Builder()
-            .url("https://sessionserver.mojang.com/session/minecraft/profile/$uuid?unsigned=false")
+            .url("https://sessionserver.mojang.com/session/minecraft/profile/${uuid}?unsigned=false")
             .build()
 
         client.newCall(request).executeAsync().use { response ->
             val responseString = response.body.string()
+            println(responseString)
             val jsonObject = JsonParser.parseString(responseString).getAsJsonObject()
             val properties = jsonObject["properties"].getAsJsonArray()
-            return properties.asSequence()
-                .map { it.getAsJsonObject() }
-                .map {
-                    TextureProperty(
-                        it["name"].asString,
-                        it["value"].asString,
-                        it["signature"]?.asString
-                    )
-                }.toObjectList()
+
+            val list = mutableListOf<TextureProperty>()
+            properties.forEach { e ->
+                val it = e.asJsonObject
+                list.add(TextureProperty(
+                    it["name"].asString,
+                    it["value"].asString,
+                    it["signature"]?.asString
+                ))
+            }
+            return list
+//            return properties.asSequence()
+//                .map { it.getAsJsonObject() }
+//                .map {
+//                    TextureProperty(
+//                        it["name"].asString,
+//                        it["value"].asString,
+//                        it["signature"]?.asString
+//                    )
+//                }.toObjectList()
         }
     }
 }

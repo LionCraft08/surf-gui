@@ -1,3 +1,5 @@
+import net.minecrell.pluginyml.paper.PaperPluginDescription
+
 plugins {
     `common-conventions`
     `shadow-conventions`
@@ -8,6 +10,14 @@ plugins {
 paper {
     main = "dev.slne.surf.gui.SurfGuiBukkitPlugin"
     loader = "dev.slne.surf.gui.bukkit.SurfGuiBukkitLoader"
+    description = "A Bukkit plugin for SurfGUI."
+//    serverDependencies{
+//        register("SurfFriends") {
+//            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+//            required = false
+//            joinClasspath = true
+//        }
+//    }
 }
 
 dependencies {

@@ -3,10 +3,9 @@ package dev.slne.surf.gui.menu.overlays
 import kotlin.math.abs
 
 object NegativeSpaceProvider {
-    private val fontMapping: java.util.HashMap<Int?, String?> = mappings
     fun getSpacing(i: Int): String? {
         require(!(i > 256 || i < -256)) { "the Spacing has to be between 256 & -256, Provided: $i" }
-        return fontMapping.get(i)
+        return mappings.get(i)
     }
 
     fun getSpacing(value: Int, toRight: Boolean): String? {
@@ -15,8 +14,8 @@ object NegativeSpaceProvider {
         } else getSpacing(Math.negateExact(abs(value)))
     }
 
-    private val mappings: HashMap<Int?, String?>
-        get() {
+    private val mappings: HashMap<Int?, String?> = get()
+    fun get():HashMap<Int?, String?> {
             val map = java.util.HashMap<Int?, String?>()
             map.put(-256, "\ud256")
             map.put(-255, "\ud255")

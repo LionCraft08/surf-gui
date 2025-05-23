@@ -14,7 +14,6 @@ annotation class ExecutableComponentMarker
  * Represents a component that can be executed when a button is clicked.
  */
 typealias ExecutableComponent = (ExecuteComponent) -> Unit
-typealias TextExecutableComponent = (TextExecuteComponent) -> Unit
 /**
  * Represents a component that can be executed when a button is clicked.
  *
@@ -31,6 +30,9 @@ data class ExecuteComponent(
     val itemStack: ItemStack?,
     val menu: Menu
 )
+
+typealias TextExecutableComponent = (TextExecuteComponent) -> Unit
+
 data class TextExecuteComponent(
     val user: User,
     val buttonType: ButtonType,
